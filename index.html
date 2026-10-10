@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#faf7f5">
+<meta name="description" content="在线美甲试戴：拍一张自己的手，自动识别手指并贴上甲片，看真实效果再挑款式。原图不美化，保持自然。">
+<title>美甲试戴 · 拍自己的手，直接看效果</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="美甲试戴">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/icons/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">美甲试戴</span>
+    <span class="logo-en">NAIL TRY-ON</span>
+  </div>
+  <p class="tagline">选款式 → 模型手看效果 → 拍自己的手真实比对</p>
+</header>
+
+<main>
+
+  <!-- ① 款式选择 -->
+  <section class="card">
+    <div class="row-between">
+      <h2><i class="step">1</i>选择美甲款式</h2>
+      <span class="hint">点击即可试戴</span>
+    </div>
+    <div class="chips" id="seriesChips"></div>
+    <div class="style-strip" id="styleStrip"></div>
+  </section>
+
+  <!-- ② 预览区 -->
+  <section class="card">
+    <div class="row-between">
+      <h2><i class="step">2</i>看效果</h2>
+      <span class="hint" id="curStyleName"></span>
+    </div>
+
+    <div class="segmented" id="modeTabs">
+      <button type="button" data-mode="photo" class="on">我的手</button>
+      <button type="button" data-mode="model">模型手</button>
+    </div>
+
+    <div class="option-bar">
+      <div class="option-row">
+        <span class="opt-label">甲型</span>
+        <div class="chips" id="shapeChips"></div>
+      </div>
+      <div class="option-row">
+        <span class="opt-label">长短</span>
+        <div class="chips" id="lenChips"></div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="viewport" id="viewModel"></div>
+
+      <div class="viewport" id="viewPhoto" hidden>
+        <canvas id="photoCanvas" width="2" height="2"></canvas>
+        <div class="empty-state" id="photoEmpty">
+          <div class="empty-ico">🤳</div>
+          <p class="empty-title">先拍一张自己的手</p>
+          <p class="empty-sub">原图不做磨皮、瘦手处理，只叠加甲片<br>照片仅在本机浏览器处理，不会上传服务器</p>
+          <div class="row gap8 center">
+            <button type="button" class="btn primary" id="camBtn2">拍照</button>
+            <button type="button" class="btn" id="fileBtn2">从相册选择</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="stage-hint" id="stageHint">真实照片 · 只叠加甲片，不修饰肤色与手型</p>
+  </section>
+
+  <!-- ③ 照片工具（仅「我的手」模式显示） -->
+  <section class="card tools" id="photoTools" hidden>
+    <h2><i class="step">3</i>把甲片放到自己的手上</h2>
+
+    <div class="row gap8 wrap" id="placeRow">
+      <button type="button" class="btn primary" id="autoBtn">自动识别手指</button>
+      <button type="button" class="btn" id="pickBtn">手动点选指位</button>
+      <button type="button" class="btn ghost" id="spreadBtn">一键铺开</button>
+      <button type="button" class="btn ghost" id="undoBtn" disabled>↩ 上一步</button>
+      <button type="button" class="btn ghost" id="clearBtn" hidden>移除照片</button>
+    </div>
+
+    <div class="pick-bar" id="pickBar" hidden>
+      <span class="dot"></span>
+      <span id="pickText"></span>
+      <button type="button" class="btn tiny" id="pickUndoBtn">↩ 上一步</button>
+      <button type="button" class="btn tiny ghost" id="cancelPickBtn">取消</button>
+    </div>
+
+    <div class="adjust" id="adjustRow" hidden>
+      <div class="row-between">
+        <span class="opt-label">当前选中：<b id="selName">—</b></span>
+        <span class="hint">拖动可移动，双指缩放旋转</span>
+      </div>
+      <label class="slider-row">大小 <input type="range" id="rngSize" min="0.5" max="2" step="0.01" value="1"></label>
+      <label class="slider-row">旋转 <input type="range" id="rngRot" min="-45" max="45" step="0.5" value="0"></label>
+      <div class="row gap8 wrap">
+        <button type="button" class="btn tiny" id="syncBtn">同步到所有手指</button>
+        <button type="button" class="btn tiny ghost" id="resetBtn">重置微调</button>
+        <button type="button" class="btn tiny ghost" id="delBtn">删除这一片</button>
+        <button type="button" class="btn tiny ghost" id="undoBtn2">↩ 上一步</button>
+      </div>
+    </div>
+
+    <button type="button" class="btn primary wide" id="saveBtn" hidden>保存效果图</button>
+  </section>
+
+  <!-- ④ 说明 -->
+  <section class="card info">
+    <h2>使用说明</h2>
+    <ol>
+      <li>先拍 / 选一张自己手的照片（建议光线均匀、手掌或手背正对镜头、五指自然张开、背景干净）。</li>
+      <li>点<b>「自动识别手指」</b>，会自动找到每根手指并把甲片贴上去；大拇指偏大也会单独适配。</li>
+      <li>识别不准就点「手动点选指位」，按提示依次点每根手指的<b>指甲尖端</b>和<b>指甲根部</b>。</li>
+      <li>点错了、或者调歪了，随时点<b>「↩ 上一步」</b>退回。</li>
+      <li>拖动甲片微调位置，双指缩放旋转；满意后点「保存效果图」。</li>
+      <li>想先看款式上身效果，切到「模型手」，上面挑款式即可实时预览。</li>
+    </ol>
+    <p class="fine">关于真实感：本工具不会修饰你的手部肤色、形状和背景，甲片只作为款式示意叠加在原图上。
+      实际效果还会受甲床形状、甲长、光线影响，建议到店与美甲师确认真实效果。</p>
+  </section>
+
+  <footer class="foot">美甲试戴 · 所有照片只在你的手机 / 电脑浏览器内处理</footer>
+</main>
+
+<input type="file" id="camInput" accept="image/*" capture="user" hidden>
+<input type="file" id="fileInput" accept="image/*" hidden>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="resultModal">
+  <div class="modal-box">
+    <p class="modal-title">保存效果图</p>
+    <img id="resultImg" alt="试戴效果图">
+    <p class="modal-tip">手机：长按图片保存到相册 · 电脑：点下面的按钮下载</p>
+    <div class="row gap8 center">
+      <a class="btn primary" id="resultLink" download="nail-tryon.png">下载图片</a>
+      <button type="button" class="btn ghost" id="closeResult">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 安装到手机 / 离线状态提示 -->
+<div class="install-bar" id="installBar" hidden>
+  <span id="installText">装到手机桌面，没网也能用</span>
+  <button type="button" class="btn tiny primary" id="installBtn">安装</button>
+  <button type="button" class="btn tiny ghost" id="installClose">×</button>
+</div>
+
+<script src="assets/js/nail-art.js"></script>
+<script src="assets/js/hand-detect.js"></script>
+<script src="assets/js/hand-model.js"></script>
+<script src="assets/js/try-on.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+/* ===== 离线（PWA）：注册 Service Worker + 安装到桌面 ===== */
+(function () {
+  var isHttp = location.protocol === 'http:' || location.protocol === 'https:';
+
+  // 1) 注册 Service Worker：首次联网打开后整个网站会被缓存，之后断网也能用
+  if (isHttp && 'serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+
+  var bar = document.getElementById('installBar');
+  var text = document.getElementById('installText');
+  var btn = document.getElementById('installBtn');
+  var close = document.getElementById('installClose');
+  if (!bar) return;
+
+  function hideBar() {
+    bar.hidden = true;
+    document.body.classList.remove('has-install-bar');
+  }
+  function showBar(msg, withBtn) {
+    text.textContent = msg;
+    btn.hidden = !withBtn;
+    bar.hidden = false;
+    document.body.classList.add('has-install-bar');
+  }
+  if (close) close.addEventListener('click', hideBar);
+
+  // 已经是「桌面应用」模式打开的，不用再提示安装
+  var standalone = window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document);
+  var isWeChat = /MicroMessenger/i.test(ua);
+  var deferred = null;
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    if (!standalone) showBar('装到手机桌面，以后没网也能直接打开', true);
+  });
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      if (!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.then(function () { deferred = null; hideBar(); });
+    });
+  }
+
+  window.addEventListener('appinstalled', hideBar);
+
+  // iOS（含 Safari / 微信）不会触发 beforeinstallprompt，给一句手动指引
+  if (!standalone && !deferred) {
+    if (isWeChat) {
+      showBar('微信里请点右上角「⋯」→ 在浏览器打开，再添加到主屏幕', false);
+    } else if (isIOS) {
+      showBar('点底部分享 ↑ → 添加到主屏幕，之后可离线使用', false);
+    }
+  }
+
+  // 断网时给个提示，避免用户以为坏了
+  window.addEventListener('offline', function () {
+    showBar('已离线，仍可正常拍照试戴（照片只在本机处理）', false);
+  });
+})();
+</script>
+</body>
+</html>

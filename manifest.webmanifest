@@ -1,0 +1,39 @@
+{
+  "id": "nail-tryon",
+  "name": "美甲试戴 · Nail Try-On",
+  "short_name": "美甲试戴",
+  "description": "拍一张自己的手，自动识别手指并贴上甲片，看真实效果再挑款式。照片只在本机浏览器处理。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#faf7f5",
+  "theme_color": "#faf7f5",
+  "icons": [
+    {
+      "src": "assets/icons/favicon-64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,574 @@
+/* =====================================================================
+   美甲试戴 — 简约风格样式表（移动优先）
+   ===================================================================== */
+
+:root {
+  --bg: #faf7f5;
+  --card: #ffffff;
+  --line: #efe5e0;
+  --line-strong: #e3d5cf;
+  --ink: #2c2523;
+  --ink-2: #8b7c76;
+  --ink-3: #b3a49e;
+  --accent: #c9816f;
+  --accent-2: #e8aca0;
+  --accent-soft: #fdf1ec;
+  --radius: 18px;
+  --shadow: 0 2px 10px rgba(120, 86, 74, 0.06);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ------------------------------ 顶部 ------------------------------ */
+
+.topbar {
+  padding: 22px 18px 8px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.brand { display: flex; align-items: baseline; gap: 8px; }
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.logo-en {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+.tagline {
+  margin: 6px 0 0;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+/* ------------------------------ 布局 ------------------------------ */
+
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 10px 14px 30px;
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+h2 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.row { display: flex; align-items: center; }
+.wrap { flex-wrap: wrap; }
+.gap8 { gap: 8px; }
+.center { justify-content: center; }
+
+.hint { font-size: 12px; color: var(--ink-3); }
+
+/* ------------------------------ 款式选择 ------------------------------ */
+
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.series-chips, #seriesChips { margin-bottom: 12px; }
+
+.chip {
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--ink-2);
+  border-radius: 999px;
+  padding: 5px 13px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.chip.on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.style-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.style-strip::-webkit-scrollbar { height: 5px; }
+.style-strip::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 4px;
+}
+
+.style-card {
+  flex: 0 0 auto;
+  width: 86px;
+  border: 1.5px solid var(--line);
+  background: linear-gradient(180deg, #fdf8f6 0%, #fbf2ee 100%);
+  border-radius: 14px;
+  padding: 6px 4px 5px;
+  cursor: pointer;
+  scroll-snap-align: start;
+  font-family: inherit;
+  transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+.style-card.on {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(201, 129, 111, 0.13);
+}
+
+.style-card:active { transform: scale(0.97); }
+
+.style-thumb {
+  display: block;
+  width: 76px;
+  height: 92px;
+  margin: 0 auto;
+}
+
+.style-name {
+  display: block;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--ink-2);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.style-card.on .style-name { color: var(--accent); font-weight: 600; }
+
+/* ------------------------------ 模式切换 ------------------------------ */
+
+.segmented {
+  display: flex;
+  background: #f6efec;
+  border-radius: 12px;
+  padding: 3px;
+  margin-bottom: 12px;
+}
+
+.segmented button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 9px 4px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.segmented button.on {
+  background: #fff;
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(120, 86, 74, 0.1);
+}
+
+.option-bar {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.option-row .chips { flex-wrap: nowrap; overflow-x: auto; padding: 2px 0; }
+
+.opt-label {
+  font-size: 12px;
+  color: var(--ink-3);
+  flex: 0 0 auto;
+  width: 30px;
+}
+
+/* ------------------------------ 舞台 ------------------------------ */
+
+.stage {
+  position: relative;
+  background: linear-gradient(180deg, #fdf9f7 0%, #f8f0ec 100%);
+  border-radius: 14px;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  width: 100%;
+}
+
+.viewport {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+#viewModel { padding: 6px; }
+
+#viewModel svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 58vh;
+}
+
+#photoCanvas {
+  display: block;
+  border-radius: 10px;
+  touch-action: none;
+  cursor: grab;
+  max-width: 100%;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px 18px;
+  max-width: 340px;
+}
+
+.empty-ico { font-size: 34px; line-height: 1; }
+.empty-title { font-weight: 600; margin: 10px 0 6px; }
+.empty-sub { font-size: 12.5px; color: var(--ink-2); margin: 0 0 14px; line-height: 1.7; }
+
+.stage-hint {
+  margin: 10px 2px 0;
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+/* ------------------------------ 按钮 ------------------------------ */
+
+.btn {
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 11px;
+  padding: 9px 15px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s ease;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn.ghost { background: #fff; color: var(--ink-2); }
+.btn.tiny { padding: 6px 11px; font-size: 12.5px; border-radius: 9px; }
+.btn.wide { width: 100%; margin-top: 12px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:disabled:active { transform: none; }
+
+.pick-bar .btn { margin-left: 0; }
+.pick-bar #pickUndoBtn { margin-left: auto; }
+
+/* ------------------------------ 照片工具 ------------------------------ */
+
+.tools h2 { margin-bottom: 10px; }
+
+.pick-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-soft);
+  border: 1px solid #f5ded6;
+  color: #9c5c4c;
+  border-radius: 11px;
+  padding: 9px 12px;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.pick-bar .dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: 0 0 auto;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .35; transform: scale(.75); }
+}
+
+.pick-bar .btn { margin-left: auto; }
+
+.adjust {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-strong);
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 10px 0;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  border-radius: 4px;
+  background: #f0e0da;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgba(150, 100, 85, 0.4);
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #fff;
+  cursor: pointer;
+}
+
+/* ------------------------------ 说明 ------------------------------ */
+
+.info ol {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  color: var(--ink-2);
+  font-size: 13.5px;
+}
+
+.info li { margin-bottom: 5px; }
+.info b { color: var(--ink); }
+
+.fine {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin: 0;
+  padding: 10px 12px;
+  background: #fbf6f3;
+  border-radius: 10px;
+  line-height: 1.75;
+}
+
+.foot {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-3);
+  padding: 4px 0 10px;
+}
+
+/* ------------------------------ 浮层 ------------------------------ */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(28px + env(safe-area-inset-bottom));
+  transform: translate(-50%, 16px);
+  background: rgba(44, 37, 35, 0.92);
+  color: #fff;
+  font-size: 13px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .22s ease;
+  z-index: 60;
+  max-width: 84vw;
+  text-align: center;
+}
+
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(40, 32, 30, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 70;
+}
+
+.modal.show { display: flex; }
+
+.modal-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow: auto;
+  text-align: center;
+}
+
+.modal-title { font-weight: 700; margin: 0 0 10px; }
+.modal-box img { width: 100%; border-radius: 12px; display: block; }
+.modal-tip { font-size: 12px; color: var(--ink-3); margin: 10px 0 12px; }
+
+/* ------------------------------ 桌面端 ------------------------------ */
+
+@media (min-width: 940px) {
+  body { font-size: 15px; }
+  main {
+    grid-template-columns: 380px 1fr;
+    grid-template-areas:
+      "pick stage"
+      "pick tools"
+      "info info";
+    align-items: start;
+  }
+  main > section:nth-child(1) { grid-area: pick; position: sticky; top: 16px; }
+  main > section:nth-child(2) { grid-area: stage; }
+  main > section:nth-child(3) { grid-area: tools; }
+  main > section:nth-child(4) { grid-area: info; }
+
+  .style-strip {
+    flex-wrap: wrap;
+    overflow: visible;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-bottom: 2px;
+  }
+  .style-card { width: 86px; }
+  #viewModel svg { max-height: 62vh; }
+  .hint { }
+}
+
+@media (max-width: 380px) {
+  .style-card { width: 78px; }
+  .style-thumb { width: 68px; height: 84px; }
+}
+
+/* --------------------- 安装到手机 / 离线提示条 --------------------- */
+
+.install-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 65;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: calc(9px + env(safe-area-inset-top)) 12px 9px;
+  background: rgba(44, 37, 35, 0.94);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.35;
+  box-shadow: 0 4px 16px rgba(40, 30, 27, 0.16);
+}
+
+.install-bar[hidden] { display: none; }
+.install-bar span { flex: 1; min-width: 0; }
+.install-bar .btn.tiny { flex: none; }
+.install-bar .btn.tiny.primary {
+  background: var(--accent-2);
+  border-color: transparent;
+  color: #3a2a26;
+}
+.install-bar .btn.tiny.ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+  padding: 6px 10px;
+}
+
+body.has-install-bar { padding-top: 46px; }
+body.has-install-bar .topbar { padding-top: 14px; }

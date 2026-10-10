@@ -1,0 +1,3269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#faf7f5">
+<meta name="description" content="在线美甲试戴：拍一张自己的手，自动识别手指并贴上甲片，看真实效果再挑款式。原图不美化，保持自然。">
+<title>美甲试戴 · 拍自己的手，直接看效果</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="美甲试戴">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/icons/favicon-64.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<style>
+/* =====================================================================
+   美甲试戴 — 简约风格样式表（移动优先）
+   ===================================================================== */
+
+:root {
+  --bg: #faf7f5;
+  --card: #ffffff;
+  --line: #efe5e0;
+  --line-strong: #e3d5cf;
+  --ink: #2c2523;
+  --ink-2: #8b7c76;
+  --ink-3: #b3a49e;
+  --accent: #c9816f;
+  --accent-2: #e8aca0;
+  --accent-soft: #fdf1ec;
+  --radius: 18px;
+  --shadow: 0 2px 10px rgba(120, 86, 74, 0.06);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ------------------------------ 顶部 ------------------------------ */
+
+.topbar {
+  padding: 22px 18px 8px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.brand { display: flex; align-items: baseline; gap: 8px; }
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.logo-en {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--accent-2);
+  font-weight: 600;
+}
+
+.tagline {
+  margin: 6px 0 0;
+  color: var(--ink-2);
+  font-size: 13px;
+}
+
+/* ------------------------------ 布局 ------------------------------ */
+
+main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 10px 14px 30px;
+  display: grid;
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+h2 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.row { display: flex; align-items: center; }
+.wrap { flex-wrap: wrap; }
+.gap8 { gap: 8px; }
+.center { justify-content: center; }
+
+.hint { font-size: 12px; color: var(--ink-3); }
+
+/* ------------------------------ 款式选择 ------------------------------ */
+
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.series-chips, #seriesChips { margin-bottom: 12px; }
+
+.chip {
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--ink-2);
+  border-radius: 999px;
+  padding: 5px 13px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.chip.on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.style-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.style-strip::-webkit-scrollbar { height: 5px; }
+.style-strip::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 4px;
+}
+
+.style-card {
+  flex: 0 0 auto;
+  width: 86px;
+  border: 1.5px solid var(--line);
+  background: linear-gradient(180deg, #fdf8f6 0%, #fbf2ee 100%);
+  border-radius: 14px;
+  padding: 6px 4px 5px;
+  cursor: pointer;
+  scroll-snap-align: start;
+  font-family: inherit;
+  transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+
+.style-card.on {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(201, 129, 111, 0.13);
+}
+
+.style-card:active { transform: scale(0.97); }
+
+.style-thumb {
+  display: block;
+  width: 76px;
+  height: 92px;
+  margin: 0 auto;
+}
+
+.style-name {
+  display: block;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--ink-2);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.style-card.on .style-name { color: var(--accent); font-weight: 600; }
+
+/* ------------------------------ 模式切换 ------------------------------ */
+
+.segmented {
+  display: flex;
+  background: #f6efec;
+  border-radius: 12px;
+  padding: 3px;
+  margin-bottom: 12px;
+}
+
+.segmented button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 9px 4px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.segmented button.on {
+  background: #fff;
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(120, 86, 74, 0.1);
+}
+
+.option-bar {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.option-row .chips { flex-wrap: nowrap; overflow-x: auto; padding: 2px 0; }
+
+.opt-label {
+  font-size: 12px;
+  color: var(--ink-3);
+  flex: 0 0 auto;
+  width: 30px;
+}
+
+/* ------------------------------ 舞台 ------------------------------ */
+
+.stage {
+  position: relative;
+  background: linear-gradient(180deg, #fdf9f7 0%, #f8f0ec 100%);
+  border-radius: 14px;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  width: 100%;
+}
+
+.viewport {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+#viewModel { padding: 6px; }
+
+#viewModel svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 58vh;
+}
+
+#photoCanvas {
+  display: block;
+  border-radius: 10px;
+  touch-action: none;
+  cursor: grab;
+  max-width: 100%;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px 18px;
+  max-width: 340px;
+}
+
+.empty-ico { font-size: 34px; line-height: 1; }
+.empty-title { font-weight: 600; margin: 10px 0 6px; }
+.empty-sub { font-size: 12.5px; color: var(--ink-2); margin: 0 0 14px; line-height: 1.7; }
+
+.stage-hint {
+  margin: 10px 2px 0;
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: center;
+}
+
+/* ------------------------------ 按钮 ------------------------------ */
+
+.btn {
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  color: var(--ink);
+  border-radius: 11px;
+  padding: 9px 15px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s ease;
+}
+
+.btn:active { transform: scale(0.98); }
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn.ghost { background: #fff; color: var(--ink-2); }
+.btn.tiny { padding: 6px 11px; font-size: 12.5px; border-radius: 9px; }
+.btn.wide { width: 100%; margin-top: 12px; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:disabled:active { transform: none; }
+
+.pick-bar .btn { margin-left: 0; }
+.pick-bar #pickUndoBtn { margin-left: auto; }
+
+/* ------------------------------ 照片工具 ------------------------------ */
+
+.tools h2 { margin-bottom: 10px; }
+
+.pick-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-soft);
+  border: 1px solid #f5ded6;
+  color: #9c5c4c;
+  border-radius: 11px;
+  padding: 9px 12px;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.pick-bar .dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: 0 0 auto;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .35; transform: scale(.75); }
+}
+
+.pick-bar .btn { margin-left: auto; }
+
+.adjust {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line-strong);
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 10px 0;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  border-radius: 4px;
+  background: #f0e0da;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgba(150, 100, 85, 0.4);
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #fff;
+  cursor: pointer;
+}
+
+/* ------------------------------ 说明 ------------------------------ */
+
+.info ol {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  color: var(--ink-2);
+  font-size: 13.5px;
+}
+
+.info li { margin-bottom: 5px; }
+.info b { color: var(--ink); }
+
+.fine {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin: 0;
+  padding: 10px 12px;
+  background: #fbf6f3;
+  border-radius: 10px;
+  line-height: 1.75;
+}
+
+.foot {
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-3);
+  padding: 4px 0 10px;
+}
+
+/* ------------------------------ 浮层 ------------------------------ */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(28px + env(safe-area-inset-bottom));
+  transform: translate(-50%, 16px);
+  background: rgba(44, 37, 35, 0.92);
+  color: #fff;
+  font-size: 13px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .22s ease;
+  z-index: 60;
+  max-width: 84vw;
+  text-align: center;
+}
+
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(40, 32, 30, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 70;
+}
+
+.modal.show { display: flex; }
+
+.modal-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow: auto;
+  text-align: center;
+}
+
+.modal-title { font-weight: 700; margin: 0 0 10px; }
+.modal-box img { width: 100%; border-radius: 12px; display: block; }
+.modal-tip { font-size: 12px; color: var(--ink-3); margin: 10px 0 12px; }
+
+/* ------------------------------ 桌面端 ------------------------------ */
+
+@media (min-width: 940px) {
+  body { font-size: 15px; }
+  main {
+    grid-template-columns: 380px 1fr;
+    grid-template-areas:
+      "pick stage"
+      "pick tools"
+      "info info";
+    align-items: start;
+  }
+  main > section:nth-child(1) { grid-area: pick; position: sticky; top: 16px; }
+  main > section:nth-child(2) { grid-area: stage; }
+  main > section:nth-child(3) { grid-area: tools; }
+  main > section:nth-child(4) { grid-area: info; }
+
+  .style-strip {
+    flex-wrap: wrap;
+    overflow: visible;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-bottom: 2px;
+  }
+  .style-card { width: 86px; }
+  #viewModel svg { max-height: 62vh; }
+  .hint { }
+}
+
+@media (max-width: 380px) {
+  .style-card { width: 78px; }
+  .style-thumb { width: 68px; height: 84px; }
+}
+
+/* --------------------- 安装到手机 / 离线提示条 --------------------- */
+
+.install-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 65;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: calc(9px + env(safe-area-inset-top)) 12px 9px;
+  background: rgba(44, 37, 35, 0.94);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.35;
+  box-shadow: 0 4px 16px rgba(40, 30, 27, 0.16);
+}
+
+.install-bar[hidden] { display: none; }
+.install-bar span { flex: 1; min-width: 0; }
+.install-bar .btn.tiny { flex: none; }
+.install-bar .btn.tiny.primary {
+  background: var(--accent-2);
+  border-color: transparent;
+  color: #3a2a26;
+}
+.install-bar .btn.tiny.ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+  padding: 6px 10px;
+}
+
+body.has-install-bar { padding-top: 46px; }
+body.has-install-bar .topbar { padding-top: 14px; }
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">美甲试戴</span>
+    <span class="logo-en">NAIL TRY-ON</span>
+  </div>
+  <p class="tagline">选款式 → 模型手看效果 → 拍自己的手真实比对</p>
+</header>
+
+<main>
+
+  <!-- ① 款式选择 -->
+  <section class="card">
+    <div class="row-between">
+      <h2><i class="step">1</i>选择美甲款式</h2>
+      <span class="hint">点击即可试戴</span>
+    </div>
+    <div class="chips" id="seriesChips"></div>
+    <div class="style-strip" id="styleStrip"></div>
+  </section>
+
+  <!-- ② 预览区 -->
+  <section class="card">
+    <div class="row-between">
+      <h2><i class="step">2</i>看效果</h2>
+      <span class="hint" id="curStyleName"></span>
+    </div>
+
+    <div class="segmented" id="modeTabs">
+      <button type="button" data-mode="photo" class="on">我的手</button>
+      <button type="button" data-mode="model">模型手</button>
+    </div>
+
+    <div class="option-bar">
+      <div class="option-row">
+        <span class="opt-label">甲型</span>
+        <div class="chips" id="shapeChips"></div>
+      </div>
+      <div class="option-row">
+        <span class="opt-label">长短</span>
+        <div class="chips" id="lenChips"></div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="viewport" id="viewModel"></div>
+
+      <div class="viewport" id="viewPhoto" hidden>
+        <canvas id="photoCanvas" width="2" height="2"></canvas>
+        <div class="empty-state" id="photoEmpty">
+          <div class="empty-ico">🤳</div>
+          <p class="empty-title">先拍一张自己的手</p>
+          <p class="empty-sub">原图不做磨皮、瘦手处理，只叠加甲片<br>照片仅在本机浏览器处理，不会上传服务器</p>
+          <div class="row gap8 center">
+            <button type="button" class="btn primary" id="camBtn2">拍照</button>
+            <button type="button" class="btn" id="fileBtn2">从相册选择</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="stage-hint" id="stageHint">真实照片 · 只叠加甲片，不修饰肤色与手型</p>
+  </section>
+
+  <!-- ③ 照片工具（仅「我的手」模式显示） -->
+  <section class="card tools" id="photoTools" hidden>
+    <h2><i class="step">3</i>把甲片放到自己的手上</h2>
+
+    <div class="row gap8 wrap" id="placeRow">
+      <button type="button" class="btn primary" id="autoBtn">自动识别手指</button>
+      <button type="button" class="btn" id="pickBtn">手动点选指位</button>
+      <button type="button" class="btn ghost" id="spreadBtn">一键铺开</button>
+      <button type="button" class="btn ghost" id="undoBtn" disabled>↩ 上一步</button>
+      <button type="button" class="btn ghost" id="clearBtn" hidden>移除照片</button>
+    </div>
+
+    <div class="pick-bar" id="pickBar" hidden>
+      <span class="dot"></span>
+      <span id="pickText"></span>
+      <button type="button" class="btn tiny" id="pickUndoBtn">↩ 上一步</button>
+      <button type="button" class="btn tiny ghost" id="cancelPickBtn">取消</button>
+    </div>
+
+    <div class="adjust" id="adjustRow" hidden>
+      <div class="row-between">
+        <span class="opt-label">当前选中：<b id="selName">—</b></span>
+        <span class="hint">拖动可移动，双指缩放旋转</span>
+      </div>
+      <label class="slider-row">大小 <input type="range" id="rngSize" min="0.5" max="2" step="0.01" value="1"></label>
+      <label class="slider-row">旋转 <input type="range" id="rngRot" min="-45" max="45" step="0.5" value="0"></label>
+      <div class="row gap8 wrap">
+        <button type="button" class="btn tiny" id="syncBtn">同步到所有手指</button>
+        <button type="button" class="btn tiny ghost" id="resetBtn">重置微调</button>
+        <button type="button" class="btn tiny ghost" id="delBtn">删除这一片</button>
+        <button type="button" class="btn tiny ghost" id="undoBtn2">↩ 上一步</button>
+      </div>
+    </div>
+
+    <button type="button" class="btn primary wide" id="saveBtn" hidden>保存效果图</button>
+  </section>
+
+  <!-- ④ 说明 -->
+  <section class="card info">
+    <h2>使用说明</h2>
+    <ol>
+      <li>先拍 / 选一张自己手的照片（建议光线均匀、手掌或手背正对镜头、五指自然张开、背景干净）。</li>
+      <li>点<b>「自动识别手指」</b>，会自动找到每根手指并把甲片贴上去；大拇指偏大也会单独适配。</li>
+      <li>识别不准就点「手动点选指位」，按提示依次点每根手指的<b>指甲尖端</b>和<b>指甲根部</b>。</li>
+      <li>点错了、或者调歪了，随时点<b>「↩ 上一步」</b>退回。</li>
+      <li>拖动甲片微调位置，双指缩放旋转；满意后点「保存效果图」。</li>
+      <li>想先看款式上身效果，切到「模型手」，上面挑款式即可实时预览。</li>
+    </ol>
+    <p class="fine">关于真实感：本工具不会修饰你的手部肤色、形状和背景，甲片只作为款式示意叠加在原图上。
+      实际效果还会受甲床形状、甲长、光线影响，建议到店与美甲师确认真实效果。</p>
+  </section>
+
+  <footer class="foot">美甲试戴 · 所有照片只在你的手机 / 电脑浏览器内处理</footer>
+</main>
+
+<input type="file" id="camInput" accept="image/*" capture="user" hidden>
+<input type="file" id="fileInput" accept="image/*" hidden>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="resultModal">
+  <div class="modal-box">
+    <p class="modal-title">保存效果图</p>
+    <img id="resultImg" alt="试戴效果图">
+    <p class="modal-tip">手机：长按图片保存到相册 · 电脑：点下面的按钮下载</p>
+    <div class="row gap8 center">
+      <a class="btn primary" id="resultLink" download="nail-tryon.png">下载图片</a>
+      <button type="button" class="btn ghost" id="closeResult">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 安装到手机 / 离线状态提示 -->
+<div class="install-bar" id="installBar" hidden>
+  <span id="installText">装到手机桌面，没网也能用</span>
+  <button type="button" class="btn tiny primary" id="installBtn">安装</button>
+  <button type="button" class="btn tiny ghost" id="installClose">×</button>
+</div>
+
+<script>
+/* =====================================================================
+   nail-art.js — 美甲渲染引擎
+   · pathD()    : 统一的甲面路径（画布 / SVG 共用，保证形状一致）
+   · STYLES     : 款式数据（底色 + 图层 + 光泽）
+   · getCanvas(): 取某款式的甲片贴图（带缓存）
+   ===================================================================== */
+(function (global) {
+  'use strict';
+
+  /* ----------------------------- 基础工具 ----------------------------- */
+
+  function hex2rgb(hex) {
+    hex = String(hex).replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
+    return [parseInt(hex.slice(0, 2), 16), parseInt(hex.slice(2, 4), 16), parseInt(hex.slice(4, 6), 16)];
+  }
+
+  function rgba(color, a) {
+    if (a === undefined) a = 1;
+    if (String(color)[0] === '#') {
+      var c = hex2rgb(color);
+      return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+    }
+    return color;
+  }
+
+  function mulberry32(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function hashString(s) {
+    var h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+
+  /* ----------------------------- 形状定义 ----------------------------- */
+  /* 局部坐标：x ∈ [-w/2, w/2]，y = 0 甲根（甲缘皮），y = h 甲尖 */
+
+  var SHAPES = [
+    { id: 'almond', name: '杏仁' },
+    { id: 'square', name: '方圆' },
+    { id: 'coffin', name: '芭蕾' },
+    { id: 'round', name: '圆头' }
+  ];
+
+  var LENGTHS = [
+    { id: 'short', name: '短', ratio: 1.32 },
+    { id: 'mid', name: '中', ratio: 1.70 },
+    { id: 'long', name: '长', ratio: 2.12 }
+  ];
+
+  function lengthRatio(id) {
+    for (var i = 0; i < LENGTHS.length; i++) if (LENGTHS[i].id === id) return LENGTHS[i].ratio;
+    return 1.70;
+  }
+
+  function pathD(w, h, shape) {
+    var hw = w / 2;
+    var cw = hw * 0.88;      // 甲根半宽
+    var cy = h * 0.065;      // 甲根两侧起笔
+    var cc = -h * 0.125;     // 甲根控制点：中间向指根微凸
+    var n = function (v) { return v.toFixed(2); };
+    var d = ['M ' + n(-cw) + ' ' + n(cy), 'Q 0 ' + n(cc) + ' ' + n(cw) + ' ' + n(cy)];
+
+    if (shape === 'square') {
+      d.push('C ' + n(hw * 0.99) + ' ' + n(h * 0.30) + ' ' + n(hw * 0.98) + ' ' + n(h * 0.76) + ' ' + n(hw * 0.96) + ' ' + n(h * 0.92));
+      d.push('C ' + n(hw * 0.94) + ' ' + n(h * 1.00) + ' ' + n(-hw * 0.94) + ' ' + n(h * 1.00) + ' ' + n(-hw * 0.96) + ' ' + n(h * 0.92));
+      d.push('C ' + n(-hw * 0.98) + ' ' + n(h * 0.76) + ' ' + n(-hw * 0.99) + ' ' + n(h * 0.30) + ' ' + n(-cw) + ' ' + n(cy));
+    } else if (shape === 'coffin') {
+      d.push('C ' + n(hw * 1.01) + ' ' + n(h * 0.30) + ' ' + n(hw * 0.92) + ' ' + n(h * 0.66) + ' ' + n(hw * 0.66) + ' ' + n(h * 0.88));
+      d.push('C ' + n(hw * 0.62) + ' ' + n(h * 0.99) + ' ' + n(-hw * 0.62) + ' ' + n(h * 0.99) + ' ' + n(-hw * 0.66) + ' ' + n(h * 0.88));
+      d.push('C ' + n(-hw * 0.92) + ' ' + n(h * 0.66) + ' ' + n(-hw * 1.01) + ' ' + n(h * 0.30) + ' ' + n(-cw) + ' ' + n(cy));
+    } else if (shape === 'round') {
+      d.push('C ' + n(hw * 1.00) + ' ' + n(h * 0.28) + ' ' + n(hw * 1.00) + ' ' + n(h * 0.66) + ' ' + n(hw * 0.93) + ' ' + n(h * 0.84));
+      d.push('C ' + n(hw * 0.84) + ' ' + n(h * 1.00) + ' ' + n(-hw * 0.84) + ' ' + n(h * 1.00) + ' ' + n(-hw * 0.93) + ' ' + n(h * 0.84));
+      d.push('C ' + n(-hw * 1.00) + ' ' + n(h * 0.66) + ' ' + n(-hw * 1.00) + ' ' + n(h * 0.28) + ' ' + n(-cw) + ' ' + n(cy));
+    } else { // almond 杏仁
+      d.push('C ' + n(hw * 1.00) + ' ' + n(h * 0.30) + ' ' + n(hw * 0.94) + ' ' + n(h * 0.70) + ' ' + n(hw * 0.50) + ' ' + n(h * 0.88));
+      d.push('C ' + n(hw * 0.33) + ' ' + n(h * 0.96) + ' ' + n(hw * 0.16) + ' ' + n(h) + ' 0 ' + n(h));
+      d.push('C ' + n(-hw * 0.16) + ' ' + n(h) + ' ' + n(-hw * 0.33) + ' ' + n(h * 0.96) + ' ' + n(-hw * 0.50) + ' ' + n(h * 0.88));
+      d.push('C ' + n(-hw * 0.94) + ' ' + n(h * 0.70) + ' ' + n(-hw * 1.00) + ' ' + n(h * 0.30) + ' ' + n(-cw) + ' ' + n(cy));
+    }
+    d.push('Z');
+    return d.join(' ');
+  }
+
+  /* 柔和的椭圆光晕：用于珍珠光、猫眼光带、高光 */
+  function softEllipse(ctx, cx, cy, rx, ry, rot, stops) {
+    ctx.save();
+    ctx.translate(cx, cy);
+    if (rot) ctx.rotate(rot);
+    ctx.scale(Math.max(rx, 0.001), Math.max(ry, 0.001));
+    var g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+    for (var i = 0; i < stops.length; i++) g.addColorStop(stops[i][0], stops[i][1]);
+    ctx.fillStyle = g;
+    ctx.fillRect(-1, -1, 2, 2);
+    ctx.restore();
+  }
+
+  /* ----------------------------- 基础图形 ----------------------------- */
+
+  function sparkle(ctx, x, y, r, color, a, thin) {
+    var k = thin === undefined ? 0.16 : thin;
+    ctx.beginPath();
+    ctx.moveTo(x, y - r);
+    ctx.quadraticCurveTo(x + r * k, y - r * k, x + r, y);
+    ctx.quadraticCurveTo(x + r * k, y + r * k, x, y + r);
+    ctx.quadraticCurveTo(x - r * k, y + r * k, x - r, y);
+    ctx.quadraticCurveTo(x - r * k, y - r * k, x, y - r);
+    ctx.closePath();
+    ctx.fillStyle = rgba(color, a);
+    ctx.fill();
+  }
+
+  function gem(ctx, x, y, r, color, a) {
+    var g = ctx.createRadialGradient(x - r * 0.30, y - r * 0.34, r * 0.05, x, y, r);
+    g.addColorStop(0, 'rgba(255,255,255,' + Math.min(1, a + 0.1) + ')');
+    g.addColorStop(0.42, rgba(color, a));
+    g.addColorStop(1, rgba(color, Math.max(0, a - 0.25)));
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.lineWidth = Math.max(0.6, r * 0.16);
+    ctx.strokeStyle = 'rgba(255,255,255,' + (a * 0.75) + ')';
+    ctx.stroke();
+    sparkle(ctx, x - r * 0.28, y - r * 0.30, r * 0.62, '#ffffff', Math.min(1, a + 0.15));
+  }
+
+  /* ----------------------------- 图层实现 ----------------------------- */
+  /* 每个图层拿到 { ctx, path, w, h, rng } */
+
+  var LAYERS = {
+
+    /* 指尖渐亮 / 渐深 */
+    ombre: function (L, o) {
+      var ctx = L.ctx, h = L.h, w = L.w;
+      ctx.save();
+      ctx.clip(L.path);
+      var y0 = h * o.from, y1 = h * o.to;
+      var g = ctx.createLinearGradient(0, y0, 0, y1);
+      var a = o.a === undefined ? 0.85 : o.a;
+      g.addColorStop(0, rgba(o.color, 0));
+      g.addColorStop(0.5, rgba(o.color, a * 0.45));
+      g.addColorStop(1, rgba(o.color, a));
+      ctx.fillStyle = g;
+      ctx.fillRect(-w, y0, w * 2, (y1 - y0) + h * 0.5);
+      ctx.restore();
+    },
+
+    /* 法式甲尖 */
+    french: function (L, o) {
+      var ctx = L.ctx, h = L.h, w = L.w;
+      ctx.save();
+      ctx.clip(L.path);
+      var t = o.thickness === undefined ? 0.28 : o.thickness;
+      var y0 = h * (1 - t);
+      var bow = h * (o.bow === undefined ? 0.10 : o.bow);
+      ctx.beginPath();
+      ctx.moveTo(-w, y0 + bow * 0.90);
+      ctx.bezierCurveTo(-w * 0.42, y0 - bow, w * 0.42, y0 - bow, w, y0 + bow * 0.90);
+      ctx.lineTo(w, h * 1.4);
+      ctx.lineTo(-w, h * 1.4);
+      ctx.closePath();
+      var fg = ctx.createLinearGradient(0, y0 - bow, 0, h);
+      fg.addColorStop(0, rgba(o.color, (o.a === undefined ? 1 : o.a) * 0.94));
+      fg.addColorStop(1, rgba(o.color, o.a === undefined ? 1 : o.a));
+      ctx.fillStyle = fg;
+      ctx.fill();
+      ctx.restore();
+    },
+
+    /* 猫眼磁感光带 */
+    catEye: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h;
+      var a = o.a === undefined ? 0.5 : o.a;
+      var ang = (o.angle === undefined ? -24 : o.angle) * Math.PI / 180;
+      var y = (o.y === undefined ? 0.42 : o.y) * h;
+      ctx.save();
+      ctx.clip(L.path);
+      ctx.globalCompositeOperation = 'lighter';
+      softEllipse(ctx, 0, y, w * 0.62, h * 0.11, ang, [
+        [0, rgba(o.color, a * 0.55)], [0.5, rgba(o.color, a * 0.20)], [1, rgba(o.color, 0)]
+      ]);
+      softEllipse(ctx, 0, y, w * 0.46, h * 0.026, ang, [
+        [0, 'rgba(255,255,255,0.80)'], [0.6, 'rgba(255,255,255,0.22)'], [1, 'rgba(255,255,255,0)']
+      ]);
+      ctx.restore();
+    },
+
+    /* 细闪 / 砂糖 */
+    glitter: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h, rng = L.rng;
+      var y0 = o.y0 === undefined ? 0 : o.y0;
+      var y1 = o.y1 === undefined ? 1 : o.y1;
+      var colors = o.colors || [o.color || '#ffffff'];
+      ctx.save();
+      ctx.clip(L.path);
+      for (var i = 0; i < o.n; i++) {
+        var rx = rng(), ry = rng();
+        var x = (rx * 1.06 - 0.03) * w - w / 2;
+        var y = (y0 + ry * (y1 - y0)) * h;
+        var s = (o.size === undefined ? 1 : o.size) * (0.32 + rng() * rng() * 1.2) * (w / 58);
+        s = Math.min(s, w * 0.018);
+        var col = colors[Math.floor(rng() * colors.length) % colors.length];
+        var a = (o.a === undefined ? 0.6 : o.a) * (0.35 + rng() * 0.75);
+        if (s > w * 0.009) {
+          sparkle(ctx, x, y, s * 1.75, col, a * 0.9, 0.14);
+        } else {
+          ctx.beginPath();
+          ctx.arc(x, y, s, 0, Math.PI * 2);
+          ctx.fillStyle = rgba(col, a);
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+    },
+
+    /* 贝母箔片 */
+    foil: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h, rng = L.rng;
+      var colors = o.colors || ['#ffffff', '#ffe9f0', '#eef4ff'];
+      ctx.save();
+      ctx.clip(L.path);
+      for (var i = 0; i < o.n; i++) {
+        var x = (rng() * 1.02 - 0.01) * w - w / 2;
+        var y = (o.y0 === undefined ? 0.08 : o.y0) * h + rng() * (o.span === undefined ? 0.7 : o.span) * h;
+        var r = w * (0.05 + rng() * 0.12);
+        var rot = rng() * Math.PI;
+        var col = colors[Math.floor(rng() * colors.length) % colors.length];
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.globalAlpha = (o.a === undefined ? 0.55 : o.a) * (0.5 + rng() * 0.7);
+        var g = ctx.createLinearGradient(-r, -r * 0.6, r, r * 0.6);
+        g.addColorStop(0, rgba(col, 0.15));
+        g.addColorStop(0.45, rgba(col, 0.95));
+        g.addColorStop(1, rgba(col, 0.2));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(-r, -r * 0.42);
+        ctx.lineTo(r * 0.62, -r * 0.78);
+        ctx.lineTo(r, r * 0.36);
+        ctx.lineTo(-r * 0.5, r * 0.7);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.restore();
+    },
+
+    /* 极光 / 珍珠光带 */
+    aurora: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h;
+      var bands = o.bands || [
+        { c: '#ffffff', a: 0.34, x: -0.10, y: 0.30, rx: 0.52, ry: 0.15, rot: -0.40 },
+        { c: '#ffd9e6', a: 0.26, x: 0.06, y: 0.54, rx: 0.50, ry: 0.13, rot: 0.34 },
+        { c: '#d9e8ff', a: 0.24, x: -0.04, y: 0.76, rx: 0.46, ry: 0.12, rot: -0.24 }
+      ];
+      ctx.save();
+      ctx.clip(L.path);
+      ctx.globalCompositeOperation = 'lighter';
+      for (var i = 0; i < bands.length; i++) {
+        var b = bands[i];
+        softEllipse(ctx, (b.x || 0) * w, b.y * h, (b.rx || 0.5) * w, (b.ry || 0.13) * h, b.rot || 0, [
+          [0, rgba(b.c, b.a)], [0.5, rgba(b.c, b.a * 0.42)], [1, rgba(b.c, 0)]
+        ]);
+      }
+      ctx.restore();
+    },
+
+    /* 手绘格纹 */
+    plaid: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h;
+      var col = o.color || '#a87b6c';
+      ctx.save();
+      ctx.clip(L.path);
+      ctx.lineCap = 'round';
+      var xs = o.xs || [-0.46, -0.02, 0.42];
+      var ys = o.ys || [0.26, 0.54, 0.82];
+      var lw = (o.lw === undefined ? 0.014 : o.lw) * w;
+      var i, p;
+      for (i = 0; i < ys.length; i++) {
+        p = ys[i] * h;
+        ctx.beginPath();
+        ctx.moveTo(-w * 0.6, p);
+        ctx.lineTo(w * 0.6, p + (i % 2 ? w * 0.02 : -w * 0.015));
+        ctx.lineWidth = lw * (i % 2 ? 0.7 : 1);
+        ctx.strokeStyle = rgba(col, o.a === undefined ? 0.75 : o.a);
+        ctx.stroke();
+      }
+      for (i = 0; i < xs.length; i++) {
+        p = xs[i] * w;
+        ctx.beginPath();
+        ctx.moveTo(p, -h * 0.05);
+        ctx.lineTo(p + (i % 2 ? w * 0.03 : -w * 0.02), h * 1.05);
+        ctx.lineWidth = lw * (i % 2 ? 0.7 : 1);
+        ctx.strokeStyle = rgba(col, o.a === undefined ? 0.75 : o.a);
+        ctx.stroke();
+      }
+      // 白色细线，制造手绘感
+      ctx.lineWidth = lw * 0.42;
+      ctx.strokeStyle = 'rgba(255,255,255,0.75)';
+      for (i = 0; i < ys.length; i++) {
+        p = ys[i] * h + lw * 1.15;
+        ctx.beginPath(); ctx.moveTo(-w * 0.55, p); ctx.lineTo(w * 0.55, p); ctx.stroke();
+      }
+      for (i = 0; i < xs.length; i++) {
+        p = xs[i] * w + lw * 1.15;
+        ctx.beginPath(); ctx.moveTo(p, h * 0.02); ctx.lineTo(p, h * 1.0); ctx.stroke();
+      }
+      ctx.restore();
+    },
+
+    /* 波点 */
+    dots: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h, rng = L.rng;
+      var cols = o.cols || 3, rows = o.rows || 3;
+      var x0 = o.x0 === undefined ? 0.16 : o.x0, x1 = o.x1 === undefined ? 0.84 : o.x1;
+      var y0 = o.y0 === undefined ? 0.14 : o.y0, y1 = o.y1 === undefined ? 0.9 : o.y1;
+      ctx.save();
+      ctx.clip(L.path);
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          var fx = cols === 1 ? 0.5 : c / (cols - 1);
+          var fy = rows === 1 ? 0.5 : r / (rows - 1);
+          var x = (x0 + fx * (x1 - x0)) * w - w / 2 + (rng() - 0.5) * w * 0.05;
+          var y = (y0 + fy * (y1 - y0)) * h + (rng() - 0.5) * h * 0.03;
+          ctx.beginPath();
+          ctx.arc(x, y, w * (o.size === undefined ? 0.028 : o.size) * (0.7 + rng() * 0.7), 0, Math.PI * 2);
+          ctx.fillStyle = rgba(o.color, o.a === undefined ? 0.85 : o.a);
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+    },
+
+    /* 星星 */
+    stars: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h, rng = L.rng;
+      ctx.save();
+      ctx.clip(L.path);
+      for (var i = 0; i < o.n; i++) {
+        var x = (0.12 + rng() * 0.76) * w - w / 2;
+        var y = (o.y0 === undefined ? 0.1 : o.y0) * h + rng() * ((o.y1 === undefined ? 0.9 : o.y1) - (o.y0 === undefined ? 0.1 : o.y0)) * h;
+        var r = w * (o.size === undefined ? 0.085 : o.size) * (0.65 + rng() * 0.7);
+        sparkle(ctx, x, y, r, o.color || '#6b4a3f', o.a === undefined ? 0.92 : o.a);
+      }
+      ctx.restore();
+    },
+
+    /* 水钻 */
+    gems: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h, rng = L.rng;
+      ctx.save();
+      ctx.clip(L.path);
+      for (var i = 0; i < o.n; i++) {
+        var x = (0.16 + rng() * 0.68) * w - w / 2;
+        var y = (o.y0 === undefined ? 0.12 : o.y0) * h + rng() * ((o.y1 === undefined ? 0.88 : o.y1) - (o.y0 === undefined ? 0.12 : o.y0)) * h;
+        var r = w * (o.size === undefined ? 0.075 : o.size) * (0.7 + rng() * 0.7);
+        gem(ctx, x, y, r, o.color || '#f2f6ff', o.a === undefined ? 0.95 : o.a);
+      }
+      ctx.restore();
+    },
+
+    /* 线条 */
+    line: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h;
+      ctx.save();
+      ctx.clip(L.path);
+      ctx.lineCap = 'round';
+      if (o.shape === 'arc') {
+        ctx.beginPath();
+        ctx.moveTo(-w * 0.5, h * (o.y === undefined ? 0.72 : o.y));
+        ctx.quadraticCurveTo(0, h * ((o.y === undefined ? 0.72 : o.y) + 0.16), w * 0.5, h * (o.y === undefined ? 0.72 : o.y));
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(-w * 0.3, h * ((o.y === undefined ? 0.3 : o.y) - 0.18));
+        ctx.quadraticCurveTo(0, h * 0.5, w * 0.3, h * ((o.y === undefined ? 0.3 : o.y) + 0.3));
+      }
+      ctx.lineWidth = w * (o.lw === undefined ? 0.018 : o.lw);
+      ctx.strokeStyle = rgba(o.color || '#b98b7c', o.a === undefined ? 0.8 : o.a);
+      ctx.stroke();
+      ctx.restore();
+    },
+
+    /* 蝴蝶结 */
+    bow: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h;
+      var s = w * (o.size === undefined ? 0.24 : o.size);
+      var c1 = o.color || '#fff8f6';
+      var c2 = o.color2 || '#e9c3ba';
+      var a = o.a === undefined ? 0.98 : o.a;
+      ctx.save();
+      ctx.clip(L.path);
+      ctx.translate(o.x === undefined ? 0 : o.x * w, (o.y === undefined ? 0.34 : o.y) * h);
+      ctx.rotate((o.angle || 0) * Math.PI / 180);
+      [-1, 1].forEach(function (k) {
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(k * s * 1.45, -s * 0.92);
+        ctx.quadraticCurveTo(k * s * 0.72, 0, k * s * 1.45, s * 0.92);
+        ctx.closePath();
+        var lg = ctx.createLinearGradient(0, -s, 0, s * 0.6);
+        lg.addColorStop(0, 'rgba(255,255,255,' + a + ')');
+        lg.addColorStop(1, rgba(c1, a * 0.9));
+        ctx.fillStyle = lg;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(178,124,108,0.38)';
+        ctx.lineWidth = Math.max(0.5, s * 0.045);
+        ctx.stroke();
+      });
+      ctx.beginPath();
+      ctx.ellipse(0, s * 0.10, s * 0.30, s * 0.26, 0, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(c2, a);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(160,110,95,0.4)';
+      ctx.lineWidth = Math.max(0.5, s * 0.045);
+      ctx.stroke();
+      ctx.restore();
+    },
+
+    /* 小花 / 雏菊 */
+    flower: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h;
+      var petals = o.petals || 5;
+      var r = w * (o.size === undefined ? 0.15 : o.size);
+      var cx = (o.x === undefined ? 0 : o.x) * w;
+      var cy = (o.y === undefined ? 0.32 : o.y) * h;
+      ctx.save();
+      ctx.clip(L.path);
+      ctx.translate(cx, cy);
+      ctx.rotate((o.angle || 0) * Math.PI / 180);
+      for (var i = 0; i < petals; i++) {
+        ctx.save();
+        ctx.rotate(i * Math.PI * 2 / petals);
+        ctx.beginPath();
+        ctx.ellipse(0, -r * 0.86, r * 0.48, r * 0.92, 0, 0, Math.PI * 2);
+        ctx.fillStyle = rgba(o.color || '#ffffff', o.a === undefined ? 0.95 : o.a);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(196,150,130,0.22)';
+        ctx.lineWidth = Math.max(0.5, r * 0.04);
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.40, 0, Math.PI * 2);
+      ctx.fillStyle = rgba(o.core || '#e8c07a', 0.95);
+      ctx.fill();
+      ctx.restore();
+    },
+
+    /* 雪花 */
+    snowflake: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h;
+      var r = w * (o.size === undefined ? 0.20 : o.size);
+      ctx.save();
+      ctx.clip(L.path);
+      ctx.translate((o.x === undefined ? 0 : o.x) * w, (o.y === undefined ? 0.34 : o.y) * h);
+      ctx.rotate((o.angle || 0) * Math.PI / 180);
+      ctx.strokeStyle = rgba(o.color || '#ffffff', o.a === undefined ? 0.95 : o.a);
+      ctx.lineCap = 'round';
+      ctx.lineWidth = Math.max(0.7, r * 0.13);
+      for (var i = 0; i < 6; i++) {
+        ctx.save();
+        ctx.rotate(i * Math.PI / 3);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, -r);
+        ctx.moveTo(0, -r * 0.62);
+        ctx.lineTo(-r * 0.24, -r * 0.82);
+        ctx.moveTo(0, -r * 0.62);
+        ctx.lineTo(r * 0.24, -r * 0.82);
+        ctx.moveTo(0, -r * 0.36);
+        ctx.lineTo(-r * 0.2, -r * 0.54);
+        ctx.moveTo(0, -r * 0.36);
+        ctx.lineTo(r * 0.2, -r * 0.54);
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.restore();
+    },
+
+    /* 大理石纹 */
+    marble: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h, rng = L.rng;
+      var cols = o.colors || ['#c8a291', '#e0c3b6'];
+      ctx.save();
+      ctx.clip(L.path);
+      ctx.lineCap = 'round';
+      for (var i = 0; i < (o.n || 5); i++) {
+        var y = h * (0.05 + rng() * 0.95);
+        var amp = h * (0.05 + rng() * 0.14);
+        ctx.beginPath();
+        ctx.moveTo(-w * 0.6, y);
+        ctx.bezierCurveTo(-w * 0.2, y - amp, w * 0.1, y + amp, w * 0.6, y - amp * 0.5);
+        ctx.lineWidth = w * (0.004 + rng() * 0.012);
+        ctx.strokeStyle = rgba(cols[i % cols.length], 0.18 + rng() * 0.35);
+        ctx.stroke();
+      }
+      ctx.restore();
+    },
+
+    /* 镜面描边 */
+    chrome: function (L, o) {
+      var ctx = L.ctx, w = L.w, h = L.h;
+      ctx.save();
+      ctx.clip(L.path);
+      var g = ctx.createLinearGradient(-w / 2, 0, w / 2, h);
+      g.addColorStop(0, 'rgba(255,255,255,0.95)');
+      g.addColorStop(0.4, rgba(o.color || '#dcd6d3', 0.85));
+      g.addColorStop(0.7, 'rgba(255,255,255,0.75)');
+      g.addColorStop(1, rgba(o.color || '#dcd6d3', 0.9));
+      ctx.strokeStyle = g;
+      ctx.lineWidth = w * (o.lw === undefined ? 0.07 : o.lw);
+      ctx.stroke(L.path);
+      ctx.restore();
+    }
+  };
+
+  /* ----------------------------- 面料 / 光泽 ----------------------------- */
+
+  function fillBase(L, style) {
+    var ctx = L.ctx, h = L.h, w = L.w;
+    var g = ctx.createLinearGradient(-w * 0.12, -h * 0.06, w * 0.22, h * 1.02);
+    style.base.forEach(function (s) { g.addColorStop(s[0], s[1]); });
+    ctx.fillStyle = g;
+    ctx.fill(L.path);
+  }
+
+  function drawFinish(L, style) {
+    var ctx = L.ctx, w = L.w, h = L.h, path = L.path;
+    var gloss = style.finish !== 'matte';
+    ctx.save();
+    ctx.clip(path);
+
+    /* 甲根处的血色，让半透款式更自然 */
+    ctx.globalCompositeOperation = 'source-over';
+    softEllipse(ctx, 0, h * 0.10, w * 0.44, h * 0.20, 0, [
+      [0, 'rgba(226,150,132,0.20)'], [0.6, 'rgba(226,150,132,0.07)'], [1, 'rgba(226,150,132,0)']
+    ]);
+
+    /* 曲面明暗：中间微凸、两侧压暗，制造立体感 */
+    var cyl = ctx.createLinearGradient(-w / 2, 0, w / 2, 0);
+    cyl.addColorStop(0.00, 'rgba(88,56,46,0.14)');
+    cyl.addColorStop(0.14, 'rgba(255,255,255,0.09)');
+    cyl.addColorStop(0.34, 'rgba(255,255,255,0.03)');
+    cyl.addColorStop(0.58, 'rgba(88,56,46,0.01)');
+    cyl.addColorStop(0.84, 'rgba(88,56,46,0.08)');
+    cyl.addColorStop(1.00, 'rgba(88,56,46,0.18)');
+    ctx.fillStyle = cyl;
+    ctx.fillRect(-w / 2, -h * 0.05, w, h * 1.15);
+
+    /* 甲面边缘的立体感：左侧反光、右侧压暗 */
+    var eg = ctx.createLinearGradient(-w / 2, 0, w / 2, 0);
+    eg.addColorStop(0, 'rgba(255,255,255,0.30)');
+    eg.addColorStop(0.14, 'rgba(255,255,255,0.04)');
+    eg.addColorStop(0.70, 'rgba(96,62,52,0.02)');
+    eg.addColorStop(1, 'rgba(96,62,52,0.14)');
+    ctx.strokeStyle = eg;
+    ctx.lineWidth = w * 0.07;
+    ctx.stroke(path);
+
+    /* 甲根阴影，让甲片“嵌”进手指 */
+    softEllipse(ctx, 0, h * 0.015, w * 0.62, h * 0.15, 0, [
+      [0, 'rgba(112,72,60,0.22)'], [0.5, 'rgba(112,72,60,0.07)'], [1, 'rgba(112,72,60,0)']
+    ]);
+
+    if (!gloss) {
+      ctx.fillStyle = 'rgba(255,248,244,0.22)';
+      ctx.fillRect(-w, -h * 0.2, w * 2, h * 1.4);
+    } else {
+      /* 大范围柔光（面光） */
+      softEllipse(ctx, -w * 0.16, h * 0.42, w * 0.26, h * 0.32, -0.06, [
+        [0, 'rgba(255,255,255,0.16)'], [0.45, 'rgba(255,255,255,0.06)'], [1, 'rgba(255,255,255,0)']
+      ]);
+      /* 镜面亮条：光泽的关键 */
+      softEllipse(ctx, -w * 0.21, h * 0.42, w * 0.045, h * 0.26, -0.03, [
+        [0, 'rgba(255,255,255,0.85)'], [0.4, 'rgba(255,255,255,0.22)'], [1, 'rgba(255,255,255,0)']
+      ]);
+      /* 上三分之一处的横向反光带（弧面顶部受光） */
+      softEllipse(ctx, w * 0.02, h * 0.30, w * 0.40, h * 0.08, 0.02, [
+        [0, 'rgba(255,255,255,0.08)'], [1, 'rgba(255,255,255,0)']
+      ]);
+      /* 靠甲根的副高光 */
+      softEllipse(ctx, -w * 0.08, h * 0.15, w * 0.13, h * 0.07, -0.10, [
+        [0, 'rgba(255,255,255,0.22)'], [1, 'rgba(255,255,255,0)']
+      ]);
+      /* 指尖小反光 */
+      softEllipse(ctx, w * 0.10, h * 0.88, w * 0.06, h * 0.08, 0.10, [
+        [0, 'rgba(255,255,255,0.30)'], [1, 'rgba(255,255,255,0)']
+      ]);
+    }
+
+    /* 甲尖的通透感（像真甲边缘透光） */
+    softEllipse(ctx, 0, h * 0.99, w * 0.46, h * 0.13, 0, [
+      [0, 'rgba(255,255,255,0.18)'], [0.6, 'rgba(255,255,255,0.05)'], [1, 'rgba(255,255,255,0)']
+    ]);
+    ctx.restore();
+  }
+
+  /* ----------------------------- 款式数据 ----------------------------- */
+
+  var STYLES = [
+    {
+      id: 'nude-ombre', name: '裸粉渐变', series: 'nude',
+      base: [[0, '#e9b7a7'], [0.45, '#f3cec4'], [1, '#fbe8e1']],
+      layers: [
+        { t: 'ombre', from: 0.50, to: 1.0, color: '#fff1ea', a: 0.55 },
+        { t: 'glitter', n: 30, size: 0.75, color: '#fff2ea', a: 0.42, y0: 0.15, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'milk-tea', name: '奶茶裸咖', series: 'nude',
+      base: [[0, '#cfa189'], [0.5, '#e4c0ae'], [1, '#f7e7dc']],
+      layers: [
+        { t: 'marble', n: 4, colors: ['#b98a72', '#e6cdbf'] },
+        { t: 'ombre', from: 0.5, to: 1, color: '#fff4ea', a: 0.45 },
+        { t: 'glitter', n: 22, size: 0.7, color: '#ffe9d6', a: 0.32, y0: 0.3, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'aurora-moon', name: '极光白月光', series: 'nude',
+      base: [[0, '#f5dcd7'], [0.5, '#fcedea'], [1, '#fefaf9']],
+      layers: [
+        { t: 'aurora', bands: [{ c: '#ffffff', a: 0.24, x: -0.08, y: 0.32, rx: 0.50, ry: 0.13, rot: -0.42 }, { c: '#ffd9e6', a: 0.18, x: 0.06, y: 0.58, rx: 0.48, ry: 0.11, rot: 0.32 }, { c: '#d9e8ff', a: 0.16, x: -0.02, y: 0.78, rx: 0.44, ry: 0.10, rot: -0.22 }] },
+        { t: 'foil', n: 7, y0: 0.12, span: 0.7, a: 0.30, colors: ['#ffffff', '#ffe6f0', '#e9f1ff'] },
+        { t: 'glitter', n: 26, size: 0.8, colors: ['#ffffff', '#ffe9f4', '#e6f0ff'], a: 0.5, y0: 0.1, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'sugar-glaze', name: '透亮砂糖', series: 'shine',
+      base: [[0, '#eec3b8'], [0.55, '#f7d8d1'], [1, '#fdeeea']],
+      layers: [
+        { t: 'glitter', n: 70, size: 0.62, colors: ['#ffffff', '#ffeef5'], a: 0.62, y0: 0.45, y1: 1 },
+        { t: 'glitter', n: 26, size: 0.5, colors: ['#ffffff'], a: 0.38, y0: 0, y1: 1 }
+      ],
+      finish: 'soft'
+    },
+    {
+      id: 'cat-eye', name: '玻璃猫眼', series: 'cat',
+      base: [[0, '#dcab9e'], [0.5, '#ecc2b8'], [1, '#f8dcd5']],
+      layers: [
+        { t: 'catEye', color: '#ffffff', a: 0.30, angle: -26, y: 0.30 },
+        { t: 'catEye', color: '#ffe6ef', a: 0.22, angle: -26, y: 0.68 },
+        { t: 'glitter', n: 50, size: 0.75, colors: ['#ffffff', '#ffe9f2'], a: 0.5, y0: 0.1, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'glitter-dust', name: '细闪碎钻', series: 'shine',
+      base: [[0, '#e8b9ab'], [0.5, '#f2cec4'], [1, '#fbe4dd']],
+      layers: [
+        { t: 'glitter', n: 90, size: 0.8, colors: ['#ffffff', '#ffeaf3', '#fff4d9'], a: 0.62, y0: 0.06, y1: 1 },
+        { t: 'gems', n: 3, size: 0.038, color: '#f4f7ff', a: 0.95, y0: 0.28, y1: 0.8 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'shell-foil', name: '贝母箔片', series: 'shine',
+      base: [[0, '#f6e3de'], [0.5, '#fdf4f1'], [1, '#fffbfa']],
+      layers: [
+        { t: 'aurora', bands: [{ c: '#ffffff', a: 0.24, x: -0.08, y: 0.34, rx: 0.52, ry: 0.16, rot: -0.38 }, { c: '#ffe3ee', a: 0.18, x: 0.10, y: 0.66, rx: 0.48, ry: 0.14, rot: 0.30 }] },
+        { t: 'foil', n: 11, y0: 0.08, span: 0.82, a: 0.26, colors: ['#ffffff', '#ffe4ef', '#e8f0ff', '#f6ecd3'] },
+        { t: 'glitter', n: 30, size: 0.7, colors: ['#ffffff', '#ffe9f4'], a: 0.5, y0: 0.1, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'french-white', name: '经典白法式', series: 'french',
+      base: [[0, '#e9b8a9'], [0.55, '#f5d5cb'], [1, '#fcebe6']],
+      layers: [
+        { t: 'french', color: '#fffdfc', thickness: 0.22, bow: 0.16 },
+        { t: 'glitter', n: 20, size: 0.6, color: '#ffffff', a: 0.28, y0: 0.05, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'french-pink', name: '皮粉细法式', series: 'french',
+      base: [[0, '#d9a795'], [0.5, '#e8c2b4'], [1, '#f7e0d7']],
+      layers: [
+        { t: 'french', color: '#fff2ed', thickness: 0.18, bow: 0.15 },
+        { t: 'line', shape: 'arc', y: 0.72, lw: 0.011, color: '#b98a78', a: 0.75 },
+        { t: 'glitter', n: 22, size: 0.6, color: '#ffffff', a: 0.32, y0: 0.05, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'french-chrome', name: '银边法式', series: 'french',
+      base: [[0, '#e2b6aa'], [0.5, '#efcec5'], [1, '#f8e4de']],
+      layers: [
+        { t: 'french', color: '#efeae7', thickness: 0.19, bow: 0.16 },
+        { t: 'chrome', color: '#dcd6d3', lw: 0.055 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'plaid', name: '手绘格纹', series: 'sweet',
+      base: [[0, '#e3b5a6'], [0.5, '#efccc0'], [1, '#f8e3db']],
+      layers: [
+        { t: 'plaid', color: '#9c7264', lw: 0.011, a: 0.6 },
+        { t: 'stars', n: 2, size: 0.07, color: '#5f4437', a: 0.9, y0: 0.12, y1: 0.9 },
+        { t: 'dots', cols: 3, rows: 2, size: 0.02, color: '#8a6153', a: 0.55, y0: 0.72, y1: 0.94 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'star-dot', name: '星星点点', series: 'sweet',
+      base: [[0, '#e9bcaf'], [0.5, '#f3d1c7'], [1, '#fae5de']],
+      layers: [
+        { t: 'dots', cols: 4, rows: 3, size: 0.022, color: '#fffaf8', a: 0.9, y0: 0.74, y1: 0.9 },
+        { t: 'line', shape: 'arc', y: 0.62, lw: 0.012, color: '#ffffff', a: 0.85 },
+        { t: 'stars', n: 3, size: 0.08, color: '#b07f6e', a: 0.95, y0: 0.16, y1: 0.62 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'bow', name: '小蝴蝶结', series: 'sweet',
+      base: [[0, '#eec8bf'], [0.5, '#f7dcd5'], [1, '#fdefeb']],
+      layers: [
+        { t: 'line', shape: 'arc', y: 0.74, lw: 0.014, color: '#ffffff', a: 0.9 },
+        { t: 'bow', y: 0.34, size: 0.20, color: '#fff6f4', color2: '#e9c3ba', a: 0.98 },
+        { t: 'glitter', n: 30, size: 0.7, color: '#ffffff', a: 0.4, y0: 0.05, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'daisy', name: '雏菊小花', series: 'sweet',
+      base: [[0, '#f7e6e0'], [0.5, '#fdf4f0'], [1, '#fffbf8']],
+      layers: [
+        { t: 'flower', y: 0.36, size: 0.115, color: '#ffffff', core: '#e9c07d', petals: 5, angle: 12 },
+        { t: 'glitter', n: 40, size: 0.7, colors: ['#ffffff', '#fff0d9'], a: 0.4, y0: 0.05, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'marble', name: '大理石纹', series: 'french',
+      base: [[0, '#efdbd1'], [0.5, '#f8ebe4'], [1, '#fdf7f2']],
+      layers: [
+        { t: 'marble', n: 6, colors: ['#c19b8b', '#ad8271', '#e6cdc2'] },
+        { t: 'line', shape: 'diag', y: 0.42, lw: 0.007, color: '#d0ab77', a: 0.5 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'snowflake', name: '雪花冰晶', series: 'shine',
+      base: [[0, '#e2dbe9'], [0.5, '#efeaf3'], [1, '#faf8fc']],
+      layers: [
+        { t: 'aurora', bands: [{ c: '#ffffff', a: 0.18, x: -0.06, y: 0.30, rx: 0.46, ry: 0.11, rot: -0.34 }, { c: '#e6f2ff', a: 0.14, x: 0.06, y: 0.62, rx: 0.44, ry: 0.10, rot: 0.28 }] },
+        { t: 'snowflake', y: 0.36, size: 0.30, color: '#fdfdff', a: 1 },
+        { t: 'glitter', n: 35, size: 0.7, colors: ['#ffffff', '#eaf3ff'], a: 0.55, y0: 0.05, y1: 1 }
+      ],
+      finish: 'gloss'
+    },
+    {
+      id: 'galaxy', name: '星河碎闪', series: 'shine',
+      base: [[0, '#cfc2e5'], [0.5, '#dfd6ef'], [1, '#f0ebf8']],
+      layers: [
+        { t: 'aurora', bands: [{ c: '#ffffff', a: 0.30, x: -0.06, y: 0.32, rx: 0.52, ry: 0.17, rot: -0.36 }, { c: '#cdb8ff', a: 0.28, x: 0.08, y: 0.62, rx: 0.50, ry: 0.15, rot: 0.30 }] },
+        { t: 'glitter', n: 80, size: 0.8, colors: ['#ffffff', '#d9c6ff', '#ffe3f3'], a: 0.7, y0: 0.06, y1: 1 },
+        { t: 'gems', n: 2, size: 0.038, color: '#eef1ff', a: 0.95, y0: 0.3, y1: 0.78 }
+      ],
+      finish: 'gloss'
+    }
+  ];
+
+  var SERIES = [
+    { id: 'all', name: '全部' },
+    { id: 'nude', name: '裸感' },
+    { id: 'cat', name: '猫眼' },
+    { id: 'shine', name: '闪钻' },
+    { id: 'french', name: '法式' },
+    { id: 'sweet', name: '甜酷' }
+  ];
+
+  function styleById(id) {
+    for (var i = 0; i < STYLES.length; i++) if (STYLES[i].id === id) return STYLES[i];
+    return STYLES[0];
+  }
+
+  /* ----------------------------- 渲染 & 缓存 ----------------------------- */
+
+  var CLASS_PX = { thumb: 120, main: 300 };
+  var CLASS_SCALE = { thumb: 2, main: 1.6 };
+  var CACHE_MAX = { thumb: 60, main: 20 };
+  var cache = { thumb: new Map(), main: new Map() };
+
+  function renderNail(style, shapeId, lenId, pxWidth, scale, fingerSeed) {
+    var ratio = lengthRatio(lenId);
+    var w = pxWidth, h = pxWidth * ratio;
+    var cv = document.createElement('canvas');
+    cv.width = Math.max(2, Math.round(w * scale));
+    cv.height = Math.max(2, Math.round(h * scale));
+    var ctx = cv.getContext('2d');
+    ctx.scale(scale, scale);
+    ctx.translate(w / 2, 0);
+
+    var L = {
+      ctx: ctx,
+      path: new Path2D(pathD(w, h, shapeId)),
+      w: w,
+      h: h,
+      ratio: ratio,
+      rng: mulberry32(hashString(style.id + '|' + shapeId + '|' + lenId) + (fingerSeed || 0) * 7919)
+    };
+
+    fillBase(L, style);
+    (style.layers || []).forEach(function (layer) {
+      var fn = LAYERS[layer.t];
+      if (fn) fn(L, layer);
+    });
+    drawFinish(L, style);
+    return cv;
+  }
+
+  function getCanvas(styleId, shapeId, lenId, cls, fingerSeed) {
+    cls = cls || 'main';
+    fingerSeed = fingerSeed || 0;
+    var store = cache[cls] || cache.main;
+    var key = styleId + '|' + shapeId + '|' + lenId + '|' + cls + '|' + fingerSeed;
+    if (store.has(key)) return store.get(key);
+    var cv = renderNail(styleById(styleId), shapeId, lenId, CLASS_PX[cls] || CLASS_PX.main,
+      CLASS_SCALE[cls] || 1.6, fingerSeed);
+    store.set(key, cv);
+    while (store.size > (CACHE_MAX[cls] || 20)) {
+      store.delete(store.keys().next().value);
+    }
+    return cv;
+  }
+
+  global.NailArt = {
+    SHAPES: SHAPES,
+    LENGTHS: LENGTHS,
+    SERIES: SERIES,
+    STYLES: STYLES,
+    lengthRatio: lengthRatio,
+    pathD: pathD,
+    styleById: styleById,
+    getCanvas: getCanvas,
+    renderNail: renderNail
+  };
+})(window);
+
+</script>
+<script>
+/* =====================================================================
+   hand-detect.js — 本地自动识别手指（纯前端 / 不联网 / 不上传）
+
+   流程：
+     肤色分割 → 最大连通域 → 主轴方向 + 角度搜索（用「手指细长程度」评分）
+     → 垂直剖面找指尖 → 量指宽 → 输出指尖 / 朝向 / 指宽
+
+   返回坐标基于原始图片像素
+   ===================================================================== */
+(function (global) {
+  'use strict';
+
+  var ANALYSIS_MAX = 300;        // 分析缩略图最长边
+
+  /* ------------------------------ 肤色判定 ------------------------------ */
+
+  function isSkin(r, g, b, relaxed) {
+    if (r < 45) return false;
+    var y = 0.299 * r + 0.587 * g + 0.114 * b;
+    var cb = 128 - 0.168736 * r - 0.331264 * g + 0.5 * b;
+    var cr = 128 + 0.5 * r - 0.418688 * g - 0.081312 * b;
+    var warm = r - b;
+    if (relaxed) {
+      return y > 45 && cb > 70 && cb < 142 && cr > 128 && cr < 188 && warm > 6 && r >= g * 0.97;
+    }
+    return y > 55 && cb > 76 && cb < 136 && cr > 131 && cr < 178 &&
+      warm > 10 && r > g && g > b * 0.82;
+  }
+
+  /* ------------------------------ 连通域 ------------------------------ */
+
+  function largestComponent(mask, w, h) {
+    var label = new Int32Array(w * h);
+    var stack = new Int32Array(1 << 16);
+    var best = null;
+    var id = 0;
+
+    for (var start = 0; start < mask.length; start++) {
+      if (!mask[start] || label[start]) continue;
+      id++;
+      var top = 0, size = 0;
+      stack[top++] = start;
+      label[start] = id;
+      var sumX = 0, sumY = 0, sumXX = 0, sumYY = 0, sumXY = 0;
+      var pixels = [];
+
+      while (top > 0) {
+        var cur = stack[--top];
+        var cx = cur % w, cy = (cur - cx) / w;
+        size++;
+        sumX += cx; sumY += cy;
+        sumXX += cx * cx; sumYY += cy * cy; sumXY += cx * cy;
+        pixels.push(cur);
+
+        if (cx > 0 && mask[cur - 1] && !label[cur - 1]) { label[cur - 1] = id; stack[top++] = cur - 1; }
+        if (cx < w - 1 && mask[cur + 1] && !label[cur + 1]) { label[cur + 1] = id; stack[top++] = cur + 1; }
+        if (cy > 0 && mask[cur - w] && !label[cur - w]) { label[cur - w] = id; stack[top++] = cur - w; }
+        if (cy < h - 1 && mask[cur + w] && !label[cur + w]) { label[cur + w] = id; stack[top++] = cur + w; }
+
+        if (top > stack.length - 8) {
+          var grown = new Int32Array(stack.length * 2);
+          grown.set(stack);
+          stack = grown;
+        }
+      }
+
+      if (!best || size > best.size) {
+        var mx = sumX / size, my = sumY / size;
+        best = {
+          size: size, pixels: pixels,
+          mx: mx, my: my,
+          xx: sumXX / size - mx * mx,
+          yy: sumYY / size - my * my,
+          xy: sumXY / size - mx * my
+        };
+      }
+    }
+    return best;
+  }
+
+  /* --------------------------- 旋转坐标系 --------------------------- */
+  /* u 沿手指方向，t 垂直于手指 */
+
+  function makeFrame(comp, ang, w, h) {
+    var m = { x: Math.cos(ang), y: Math.sin(ang) };
+    var n = { x: -Math.sin(ang), y: Math.cos(ang) };
+    var px = comp.pixels, N = px.length;
+    var us = new Float32Array(N), ts = new Float32Array(N);
+    var umin = 1e9, umax = -1e9, tmin = 1e9, tmax = -1e9;
+    for (var i = 0; i < N; i++) {
+      var x = px[i] % w, y = (px[i] - x) / w;
+      var dx = x - comp.mx, dy = y - comp.my;
+      var u = dx * m.x + dy * m.y;
+      var t = dx * n.x + dy * n.y;
+      us[i] = u; ts[i] = t;
+      if (u < umin) umin = u; if (u > umax) umax = u;
+      if (t < tmin) tmin = t; if (t > tmax) tmax = t;
+    }
+    return { m: m, n: n, us: us, ts: ts, umin: umin, umax: umax, tmin: tmin, tmax: tmax };
+  }
+
+  function buildGrid(frame) {
+    var uLen = Math.ceil(frame.umax - frame.umin) + 1;
+    var tLen = Math.ceil(frame.tmax - frame.tmin) + 1;
+    var grid = new Uint8Array(uLen * tLen);
+    for (var i = 0; i < frame.us.length; i++) {
+      var u = Math.round(frame.us[i] - frame.umin);
+      var t = Math.round(frame.ts[i] - frame.tmin);
+      if (u < 0 || u >= uLen || t < 0 || t >= tLen) continue;
+      grid[u * tLen + t] = 1;
+    }
+    return { grid: grid, uLen: uLen, tLen: tLen, frame: frame };
+  }
+
+  function runsAt(g, u) {
+    var count = 0, inside = false;
+    for (var t = 0; t < g.tLen; t++) {
+      var v = g.grid[u * g.tLen + t];
+      if (v && !inside) { count++; inside = true; }
+      else if (!v) inside = false;
+    }
+    return count;
+  }
+
+  function widthAt(g, u, t0) {
+    if (u < 0 || u >= g.uLen || t0 < 0 || t0 >= g.tLen) return 0;
+    if (!g.grid[u * g.tLen + t0]) return 0;
+    var a = t0, b = t0;
+    while (a > 0 && g.grid[u * g.tLen + a - 1]) a--;
+    while (b < g.tLen - 1 && g.grid[u * g.tLen + b + 1]) b++;
+    return b - a + 1;
+  }
+
+  /* 在 t 方向就近找一个在手部里的点（手指可能是斜的） */
+  function findNear(g, u, t) {
+    for (var off = 0; off <= 4; off++) {
+      if (t + off < g.tLen && g.grid[u * g.tLen + t + off]) return t + off;
+      if (t - off >= 0 && g.grid[u * g.tLen + t - off]) return t - off;
+    }
+    return -1;
+  }
+
+  function smoothArray(arr, size) {
+    var out = new Float32Array(arr.length);
+    for (var i = 0; i < arr.length; i++) {
+      var acc = 0, cnt = 0;
+      for (var k = -size; k <= size; k++) {
+        var j = i + k;
+        if (j < 0 || j >= arr.length || arr[j] < 0) continue;
+        acc += arr[j]; cnt++;
+      }
+      out[i] = cnt ? acc / cnt : -1;
+    }
+    return out;
+  }
+
+  /* 找指尖：返回归一化剖面（越大越靠近指尖）与峰值 */
+  function findTips(g, options) {
+    var headRuns = 0, tailRuns = 0;
+    var span = Math.max(4, Math.round(g.uLen * 0.16));
+    for (var i = 0; i < span; i++) {
+      headRuns += runsAt(g, i);
+      tailRuns += runsAt(g, g.uLen - 1 - i);
+    }
+    var flip = tailRuns > headRuns;
+    var dirU = flip ? -1 : 1;
+
+    var raw = new Float32Array(g.tLen).fill(-1);
+    for (var t = 0; t < g.tLen; t++) {
+      var found = -1;
+      if (flip) {
+        for (var u = g.uLen - 1; u >= 0; u--) if (g.grid[u * g.tLen + t]) { found = u; break; }
+        raw[t] = found;
+      } else {
+        for (var u2 = 0; u2 < g.uLen; u2++) if (g.grid[u2 * g.tLen + t]) { found = u2; break; }
+        raw[t] = found < 0 ? -1 : (g.uLen - 1 - found);
+      }
+    }
+
+    var prof = smoothArray(raw, 2);
+    var vmin = Infinity, vmax = -Infinity;
+    for (i = 0; i < prof.length; i++) {
+      if (prof[i] < 0) continue;
+      if (prof[i] < vmin) vmin = prof[i];
+      if (prof[i] > vmax) vmax = prof[i];
+    }
+    if (!isFinite(vmin)) return null;
+
+    var range = Math.max(1, vmax - vmin);
+    var prominence = range * (options.prominence || 0.20);
+    var minGap = Math.max(3, Math.round(g.tLen * 0.05));
+
+    var peaks = [];
+    for (i = 1; i < prof.length - 1; i++) {
+      var v = prof[i];
+      if (v < 0) continue;
+      if (prof[i - 1] > v || prof[i + 1] > v) continue;
+      var leftMin = v, rightMin = v;
+      for (var d = 1; d <= minGap * 4; d++) {
+        if (i - d >= 0 && prof[i - d] >= 0) leftMin = Math.min(leftMin, prof[i - d]);
+        if (i + d < prof.length && prof[i + d] >= 0) rightMin = Math.min(rightMin, prof[i + d]);
+        if (leftMin < v - prominence && rightMin < v - prominence) break;
+      }
+      var prom = v - Math.max(leftMin, rightMin);
+      if (prom < prominence) continue;
+      if (peaks.length && i - peaks[peaks.length - 1].t < minGap) {
+        if (prom > peaks[peaks.length - 1].prom) peaks[peaks.length - 1] = { t: i, prom: prom, v: v };
+        continue;
+      }
+      peaks.push({ t: i, prom: prom, v: v });
+    }
+
+    return { prof: prof, peaks: peaks, flip: flip, dirU: dirU, range: range, vmin: vmin, vmax: vmax };
+  }
+
+  /* 在给定方向下解析每根手指：指尖 / 朝向 / 指宽 / 细长程度 */
+  function analyzeFingers(g, tips, ang, s, comp) {
+    var flip = tips.flip, dirU = tips.dirU;
+    var peaks = tips.peaks;
+    if (peaks.length > 5) {
+      peaks = peaks.slice().sort(function (a, b) { return b.prom - a.prom; }).slice(0, 5)
+        .sort(function (a, b) { return a.t - b.t; });
+    }
+
+    var toImage = function (u, t) {
+      var du = g.frame.umin + u, dt = g.frame.tmin + t;
+      return {
+        x: (comp.mx + g.frame.m.x * du + g.frame.n.x * dt) / s,
+        y: (comp.my + g.frame.m.y * du + g.frame.n.y * dt) / s
+      };
+    };
+
+    var sampleAt = [0.050, 0.090, 0.135, 0.185];
+    var fingers = [];
+    for (var i = 0; i < peaks.length; i++) {
+      var pk = peaks[i];
+      var uTip = flip ? pk.v : (g.uLen - 1 - pk.v);
+      uTip = Math.max(0, Math.min(g.uLen - 1, Math.round(uTip)));
+
+      /* 指宽采样（中位数，抗噪） */
+      var samples = [];
+      for (var si = 0; si < sampleAt.length; si++) {
+        var us = Math.round(uTip + dirU * g.uLen * sampleAt[si]);
+        if (us < 0 || us >= g.uLen) break;
+        var tt = findNear(g, us, pk.t);
+        if (tt < 0) break;
+        var wHere = widthAt(g, us, tt);
+        if (wHere >= 2) samples.push(wHere); else break;
+      }
+      if (!samples.length) continue;
+      var sorted = samples.slice().sort(function (a, b) { return a - b; });
+      var fingerW = sorted[Math.floor(sorted.length / 2)];
+      if (fingerW < 2) continue;
+
+      /* 细长程度：从指尖往掌心走多远，指宽才明显变粗 */
+      var elong = 0;
+      for (var stp = 1; stp < g.uLen * 0.6; stp++) {
+        var u = uTip + dirU * stp;
+        if (u < 0 || u >= g.uLen) break;
+        var tc = findNear(g, u, pk.t);
+        if (tc < 0) break;
+        if (widthAt(g, u, tc) > fingerW * 1.55) break;
+        elong = stp;
+      }
+
+      /* 单指朝向：指尖到指节之间那条窄带做 PCA */
+      var uEnd = uTip + dirU * Math.round(g.uLen * 0.20);
+      var from = Math.min(uTip + dirU * 3, uEnd), to = Math.max(uTip + dirU * 3, uEnd);
+      var halfW = Math.max(3, fingerW * 0.6);
+      var su = 0, sv = 0, n = 0, sxx = 0, syy = 0, sxy = 0;
+      for (var pi = 0; pi < g.frame.us.length; pi++) {
+        var pu = g.frame.us[pi] - g.frame.umin;
+        var pv = g.frame.ts[pi] - g.frame.tmin;
+        if (Math.abs(pv - pk.t) > halfW) continue;
+        if (pu < from || pu > to) continue;
+        su += pu; sv += pv; n++;
+        sxx += pu * pu; syy += pv * pv; sxy += pu * pv;
+      }
+      var fAng = flip ? ang : ang + Math.PI;
+      if (n > 25) {
+        var mux = su / n, muv = sv / n;
+        var cx2 = sxx / n - mux * mux, cy2 = syy / n - muv * muv, cxy2 = sxy / n - mux * muv;
+        var rel = 0.5 * Math.atan2(2 * cxy2, cx2 - cy2);
+        var cu = Math.cos(rel), cv = Math.sin(rel);
+        var dirx = g.frame.m.x * cu + g.frame.n.x * cv;
+        var diry = g.frame.m.y * cu + g.frame.n.y * cv;
+        var tdx = flip ? g.frame.m.x : -g.frame.m.x;
+        var tdy = flip ? g.frame.m.y : -g.frame.m.y;
+        if (dirx * tdx + diry * tdy < 0) { dirx = -dirx; diry = -diry; }
+        fAng = Math.atan2(diry, dirx);
+      }
+
+      var tipPt = toImage(uTip + dirU * g.uLen * 0.01, pk.t);
+      var ux = Math.cos(fAng), uy = Math.sin(fAng);
+      var palmPt = toImage(uTip + dirU * g.uLen * 0.15, pk.t);
+      if ((palmPt.x - tipPt.x) * ux + (palmPt.y - tipPt.y) * uy > 0) { ux = -ux; uy = -uy; }
+
+      fingers.push({
+        tip: tipPt,
+        dir: { x: ux, y: uy },
+        width: fingerW / s,
+        elongation: elong / Math.max(1, fingerW),
+        prominence: pk.prom
+      });
+    }
+    return fingers;
+  }
+
+  /* ------------------------------ 主流程 ------------------------------ */
+
+  function detect(image, options) {
+    options = options || {};
+    var W = image.naturalWidth || image.width;
+    var H = image.naturalHeight || image.height;
+    if (!W || !H) return { ok: false, message: '图片读取失败' };
+
+    var s = Math.min(1, ANALYSIS_MAX / Math.max(W, H));
+    var aw = Math.max(40, Math.round(W * s));
+    var ah = Math.max(40, Math.round(H * s));
+
+    var cv = document.createElement('canvas');
+    cv.width = aw; cv.height = ah;
+    var ctx = cv.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(image, 0, 0, aw, ah);
+    var data = ctx.getImageData(0, 0, aw, ah).data;
+
+    var strict = new Uint8Array(aw * ah);
+    var relaxed = new Uint8Array(aw * ah);
+    var nStrict = 0;
+    for (var i = 0, p = 0; i < strict.length; i++, p += 4) {
+      var r = data[p], g2 = data[p + 1], b = data[p + 2];
+      if (isSkin(r, g2, b, false)) { strict[i] = 1; nStrict++; }
+      if (isSkin(r, g2, b, true)) relaxed[i] = 1;
+    }
+
+    var area = aw * ah;
+    var comp = nStrict > area * 0.01 ? largestComponent(strict, aw, ah) : null;
+    if (!comp || comp.size < area * 0.008) {
+      var comp2 = largestComponent(relaxed, aw, ah);
+      if (comp2 && (!comp || comp2.size > comp.size)) comp = comp2;
+    }
+    if (!comp || comp.size < area * 0.005) {
+      return { ok: false, reason: 'noskin', message: '照片里没找到手，换背景或补光再试，也可以手动点选' };
+    }
+
+    /* 主轴 + 角度搜索：用「手指够细长」来挑最像手的方向 */
+    var base = 0.5 * Math.atan2(2 * comp.xy, comp.xx - comp.yy);
+    var offsets = [0, -0.25, 0.25, -0.5, 0.5, -0.75, 0.75, -1.0, 1.0, -1.25, 1.25];
+    var best = null;
+    for (i = 0; i < offsets.length; i++) {
+      var ang = base + offsets[i];
+      var frame = makeFrame(comp, ang, aw, ah);
+      var g = buildGrid(frame);
+      var tips = findTips(g, options);
+      if (!tips || tips.peaks.length < 2) continue;
+      var fingers = analyzeFingers(g, tips, ang, s, comp);
+      if (fingers.length < 2) continue;
+
+      var score = 0;
+      for (var fi = 0; fi < fingers.length; fi++) {
+        var f = fingers[fi];
+        var elong = f.elongation;
+        if (elong < 1.0) { score -= 14; continue; }
+        score += 12 + Math.min(elong, 3.5) * 5;
+        /* 指宽要合理：不能比整只手还宽 */
+        var wRel = (f.width * s) / Math.max(1, Math.min(g.uLen, g.tLen));
+        if (wRel > 0.34) score -= 25;
+      }
+      score += fingers.length * 4;
+      if (fingers.length >= 4) score += 10;
+      if (Math.abs(offsets[i]) < 1e-6) score += 2;
+      if (!best || score > best.score) {
+        best = {
+          score: score, fingers: fingers, ang: ang,
+          debug: {
+            ang: +(ang * 180 / Math.PI).toFixed(1),
+            score: Math.round(score),
+            fingers: fingers.map(function (f) {
+              return { e: +f.elongation.toFixed(2), w: Math.round(f.width), y: Math.round(f.tip.y) };
+            })
+          }
+        };
+      }
+    }
+
+    if (!best || best.fingers.length < 2) {
+      return { ok: false, reason: 'fewpeaks', message: '没识别到手指，建议手动点选指位', debug: best && best.debug };
+    }
+
+    var out = best.fingers.slice();
+    /* 细长程度太差的丢掉 */
+    out = out.filter(function (f) { return f.elongation >= 0.75; });
+    if (out.length < 2) {
+      return { ok: false, reason: 'failed', message: '没识别到手指，请手动点选', debug: best.debug };
+    }
+
+    out.sort(function (a, b) { return a.tip.x - b.tip.x; });
+    return { ok: true, fingers: out, count: out.length };
+  }
+
+  global.HandDetect = { detect: detect, isSkin: isSkin };
+})(window);
+
+</script>
+<script>
+/* =====================================================================
+   hand-model.js — 中间区域「模型手」
+   用与照片试戴同一套甲面路径，把款式贴到 5 根手指上
+   ===================================================================== */
+(function (global) {
+  'use strict';
+
+  var NAIL = global.NailArt;
+  var VB_W = 440, VB_H = 570;
+
+  /* 手部几何：base = 指根，tip = 指尖，hw = 半宽 */
+  var FINGERS = [
+    { id: 'thumb',  label: '拇指',   base: { x: 178, y: 452 }, tip: { x: 86,  y: 306 }, hwBase: 43, hwTip: 31, nailW: 42, nailK: 0.86 },
+    { id: 'index',  label: '食指',   base: { x: 172, y: 344 }, tip: { x: 154, y: 158 }, hwBase: 33, hwTip: 25, nailW: 37, nailK: 1.00 },
+    { id: 'middle', label: '中指',   base: { x: 226, y: 326 }, tip: { x: 230, y: 120 }, hwBase: 35, hwTip: 26, nailW: 39, nailK: 1.00 },
+    { id: 'ring',   label: '无名指', base: { x: 278, y: 342 }, tip: { x: 288, y: 160 }, hwBase: 31, hwTip: 23, nailW: 36, nailK: 1.00 },
+    { id: 'pinky',  label: '小指',   base: { x: 322, y: 378 }, tip: { x: 342, y: 222 }, hwBase: 26, hwTip: 19, nailW: 30, nailK: 1.00 }
+  ];
+
+  var PALM = 'M 150 338 C 130 372 126 416 138 458 C 145 486 153 508 161 572 ' +
+             'L 283 572 C 291 508 299 486 306 458 C 318 416 346 372 294 338 ' +
+             'C 284 322 240 312 222 312 C 204 312 160 322 150 338 Z';
+
+  /* ------------------------------ 几何工具 ------------------------------ */
+
+  function axis(f) {
+    var dx = f.tip.x - f.base.x, dy = f.tip.y - f.base.y;
+    var len = Math.hypot(dx, dy);
+    return {
+      ux: dx / len, uy: dy / len,
+      nx: -dy / len, ny: dx / len,
+      len: len,
+      deg: Math.atan2(-(dx / len), dy / len) * 180 / Math.PI
+    };
+  }
+
+  function pt(f, a, t, n) {
+    return {
+      x: f.base.x + a.ux * a.len * t + a.nx * n,
+      y: f.base.y + a.uy * a.len * t + a.ny * n
+    };
+  }
+
+  /* 手指轮廓：带锥度的胶囊形 */
+  function fingerPath(f) {
+    var a = axis(f);
+    var r = function (v) { return v.toFixed(1); };
+    var P = function (t, n) { return pt(f, a, t, n); };
+    var bl = P(0.02, f.hwBase), br = P(0.02, -f.hwBase);
+    var tl = P(0.965, f.hwTip), tr = P(0.965, -f.hwTip);
+    var c1 = P(0.34, f.hwBase * 0.99), c2 = P(0.68, f.hwTip * 1.06);
+    var d1 = P(0.68, -f.hwTip * 1.06), d2 = P(0.34, -f.hwBase * 0.99);
+    var k1 = P(1.045, f.hwTip * 0.72), k2 = P(1.045, -f.hwTip * 0.72);
+    var b1 = P(-0.05, f.hwBase * 0.82), b2 = P(-0.05, -f.hwBase * 0.82);
+    return 'M ' + r(bl.x) + ' ' + r(bl.y) +
+      ' C ' + r(c1.x) + ' ' + r(c1.y) + ' ' + r(c2.x) + ' ' + r(c2.y) + ' ' + r(tl.x) + ' ' + r(tl.y) +
+      ' C ' + r(k1.x) + ' ' + r(k1.y) + ' ' + r(k2.x) + ' ' + r(k2.y) + ' ' + r(tr.x) + ' ' + r(tr.y) +
+      ' C ' + r(d1.x) + ' ' + r(d1.y) + ' ' + r(d2.x) + ' ' + r(d2.y) + ' ' + r(br.x) + ' ' + r(br.y) +
+      ' C ' + r(b2.x) + ' ' + r(b2.y) + ' ' + r(b1.x) + ' ' + r(b1.y) + ' ' + r(bl.x) + ' ' + r(bl.y) + ' Z';
+  }
+
+  /* 甲片摆放：位置 / 角度 / 尺寸 */
+  function nailPlacement(f, lenId) {
+    var a = axis(f);
+    var nailLen = f.nailW * NAIL.lengthRatio(lenId) * f.nailK;
+    var over = nailLen * 0.05;
+    var tipX = f.tip.x + a.ux * over, tipY = f.tip.y + a.uy * over;
+    return {
+      w: f.nailW,
+      h: nailLen,
+      x: tipX - a.ux * nailLen,
+      y: tipY - a.uy * nailLen,
+      rot: a.deg
+    };
+  }
+
+  /* ------------------------------ 渐变定义 ------------------------------ */
+
+  var grainUrl = null;
+  function grain() {
+    if (grainUrl) return grainUrl;
+    var c = document.createElement('canvas');
+    c.width = c.height = 72;
+    var ctx = c.getContext('2d');
+    var img = ctx.createImageData(72, 72);
+    for (var i = 0; i < img.data.length; i += 4) {
+      var v = 128 + (Math.random() * 2 - 1) * 46;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    grainUrl = c.toDataURL('image/png');
+    return grainUrl;
+  }
+
+  function defs() {
+    var out = ['<defs>'];
+
+    out.push('<pattern id="grain" width="72" height="72" patternUnits="userSpaceOnUse">' +
+      '<image href="' + grain() + '" width="72" height="72"/></pattern>');
+
+    out.push('<linearGradient id="skinBase" gradientUnits="userSpaceOnUse" x1="120" y1="150" x2="360" y2="560">' +
+      '<stop offset="0" stop-color="#f7dbc8"/><stop offset="0.32" stop-color="#f0cbb4"/>' +
+      '<stop offset="0.68" stop-color="#e6b89e"/><stop offset="1" stop-color="#daa88d"/></linearGradient>');
+
+    out.push('<radialGradient id="palmGlow" cx="0.5" cy="0.5" r="0.5">' +
+      '<stop offset="0" stop-color="#fde5d5" stop-opacity="0.80"/>' +
+      '<stop offset="0.55" stop-color="#f8dac7" stop-opacity="0.25"/>' +
+      '<stop offset="1" stop-color="#f8dac7" stop-opacity="0"/></radialGradient>');
+
+    out.push('<radialGradient id="hiSoft" cx="0.5" cy="0.5" r="0.5">' +
+      '<stop offset="0" stop-color="#fff1e6" stop-opacity="0.55"/>' +
+      '<stop offset="0.5" stop-color="#ffe9db" stop-opacity="0.18"/>' +
+      '<stop offset="1" stop-color="#ffe9db" stop-opacity="0"/></radialGradient>');
+
+    out.push('<radialGradient id="shSoft" cx="0.5" cy="0.5" r="0.5">' +
+      '<stop offset="0" stop-color="#c88a6c" stop-opacity="0.34"/>' +
+      '<stop offset="0.55" stop-color="#c88a6c" stop-opacity="0.12"/>' +
+      '<stop offset="1" stop-color="#c88a6c" stop-opacity="0"/></radialGradient>');
+
+    out.push('<linearGradient id="nailbed" gradientUnits="objectBoundingBox" x1="0.2" y1="1" x2="0.6" y2="0">' +
+      '<stop offset="0" stop-color="#f2dbd3"/><stop offset="0.32" stop-color="#f8e8e3"/>' +
+      '<stop offset="0.82" stop-color="#fdf6f3"/><stop offset="1" stop-color="#fffdfc"/></linearGradient>');
+
+    out.push('<clipPath id="handClip"><path d="' + PALM + '"/>');
+    FINGERS.forEach(function (f) { out.push('<path d="' + fingerPath(f) + '"/>'); });
+    out.push('</clipPath>');
+
+    out.push('</defs>');
+    return out.join('');
+  }
+
+  /* ------------------------------ 手部剪影 ------------------------------ */
+
+  function handMarkup() {
+    var out = [];
+
+    /* 外描边：先粗描再覆盖填充，得到干净的并集轮廓 */
+    out.push('<g fill="#eac2ac" stroke="#cf9c84" stroke-width="5" stroke-opacity="0.45" stroke-linejoin="round">');
+    out.push('<path d="' + PALM + '"/>');
+    FINGERS.forEach(function (f) { out.push('<path d="' + fingerPath(f) + '"/>'); });
+    out.push('</g>');
+
+    out.push('<g clip-path="url(#handClip)">');
+
+    /* 皮肤本体：整块并集填色，避免手指与手掌之间出现接缝 */
+    out.push('<rect x="0" y="0" width="' + VB_W + '" height="' + VB_H + '" fill="url(#skinBase)"/>');
+    /* 皮肤颗粒，破掉纯色的“塑料感” */
+    out.push('<rect x="0" y="0" width="' + VB_W + '" height="' + VB_H + '" fill="url(#grain)" opacity="0.16" style="mix-blend-mode:overlay"/>');
+    out.push('<ellipse cx="216" cy="410" rx="104" ry="118" fill="url(#palmGlow)"/>');
+
+    /* 手指体积：柔和高光 + 柔和暗面 */
+    FINGERS.forEach(function (f) {
+      var a = axis(f);
+      var deg = Math.atan2(a.uy, a.ux) * 180 / Math.PI;
+      var hw = f.hwBase * 0.6 + f.hwTip * 0.4;
+      var ellipse = function (p, rx, ry, fill) {
+        return '<ellipse cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" rx="' + rx.toFixed(1) +
+          '" ry="' + ry.toFixed(1) + '" transform="rotate(' + deg.toFixed(1) + ' ' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) +
+          ')" fill="' + fill + '"/>';
+      };
+      out.push(ellipse(pt(f, a, 0.42, -hw * 0.34), a.len * 0.46, hw * 0.86, 'url(#hiSoft)'));
+      out.push(ellipse(pt(f, a, 0.50, hw * 0.62), a.len * 0.46, hw * 0.72, 'url(#shSoft)'));
+    });
+
+    /* 拇指根部与掌侧的柔和转折 */
+    out.push('<ellipse cx="168" cy="462" rx="48" ry="64" transform="rotate(-18 168 462)" fill="url(#shSoft)" opacity="0.55"/>');
+    out.push('<ellipse cx="292" cy="430" rx="42" ry="96" fill="url(#shSoft)" opacity="0.6"/>');
+
+    /* 指节褶皱：干净的细线，看起来是刻意的插画线条 */
+    FINGERS.forEach(function (f) {
+      var a = axis(f);
+      [[0.47, 0.5]].forEach(function (c) {
+        var t = c[0], k = c[1];
+        var l = pt(f, a, t, -f.hwTip * k * 1.25);
+        var r = pt(f, a, t, f.hwTip * k * 1.25);
+        var m = pt(f, a, t + 0.035, 0);
+        out.push('<path d="M ' + l.x.toFixed(1) + ' ' + l.y.toFixed(1) +
+          ' Q ' + m.x.toFixed(1) + ' ' + m.y.toFixed(1) + ' ' + r.x.toFixed(1) + ' ' + r.y.toFixed(1) +
+          '" fill="none" stroke="rgba(184,120,96,0.24)" stroke-width="1.5" stroke-linecap="round"/>');
+      });
+    });
+
+    /* 腕部褶皱 */
+    out.push('<path d="M 168 506 Q 222 522 278 504" fill="none" stroke="rgba(184,120,96,0.26)" stroke-width="2.6" stroke-linecap="round"/>');
+    out.push('<path d="M 174 532 Q 222 546 272 530" fill="none" stroke="rgba(184,120,96,0.18)" stroke-width="2.2" stroke-linecap="round"/>');
+
+    out.push('</g>');
+    return out.join('');
+  }
+
+  /* ------------------------------ 甲片图层 ------------------------------ */
+
+  var urlCache = new Map();
+
+  function nailDataURL(styleId, shapeId, lenId, seed) {
+    var key = styleId + '|' + shapeId + '|' + lenId + '|' + seed;
+    if (urlCache.has(key)) return urlCache.get(key);
+    var url = NAIL.getCanvas(styleId, shapeId, lenId, 'main', seed).toDataURL('image/png');
+    urlCache.set(key, url);
+    if (urlCache.size > 40) urlCache.delete(urlCache.keys().next().value);
+    return url;
+  }
+
+  function nailMarkup(styleId, shapeId, lenId) {
+    var out = ['<g>'];
+    FINGERS.forEach(function (f, i) {
+      var p = nailPlacement(f, lenId);
+      var d = NAIL.pathD(p.w, p.h, shapeId);
+      var tr = 'translate(' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ') rotate(' + p.rot.toFixed(1) + ')';
+      out.push('<g transform="' + tr + '">');
+      out.push('<path d="' + d + '" fill="url(#nailbed)"/>');
+      out.push('<path d="' + d + '" fill="none" stroke="rgba(176,118,98,0.22)" stroke-width="5"/>');
+      out.push('<image href="' + nailDataURL(styleId, shapeId, lenId, i + 1) + '" x="' + (-p.w / 2).toFixed(1) +
+        '" y="0" width="' + p.w.toFixed(1) + '" height="' + p.h.toFixed(1) + '" preserveAspectRatio="none"/>');
+      out.push('</g>');
+    });
+    out.push('</g>');
+    return out.join('');
+  }
+
+  /* ------------------------------ 对外接口 ------------------------------ */
+
+  function mount(container) {
+    container.innerHTML =
+      '<svg viewBox="0 0 ' + VB_W + ' ' + VB_H + '" preserveAspectRatio="xMidYMid meet" ' +
+      'role="img" aria-label="模型手效果预览">' +
+      defs() +
+      '<g style="filter:drop-shadow(0 8px 14px rgba(150,102,80,0.20))">' +
+      handMarkup() + '</g><g id="nailLayer"></g></svg>';
+    return container.querySelector('svg');
+  }
+
+  function update(container, opts) {
+    var svg = container.querySelector('svg');
+    if (!svg) svg = mount(container);
+    svg.querySelector('#nailLayer').innerHTML = nailMarkup(opts.styleId, opts.shapeId, opts.lenId);
+  }
+
+  global.HandModel = {
+    FINGERS: FINGERS,
+    mount: mount,
+    update: update,
+    nailPlacement: nailPlacement,
+    nailDataURL: nailDataURL
+  };
+})(window);
+
+</script>
+<script>
+/* =====================================================================
+   try-on.js — 「我的手」照片试戴
+   · 原图不做任何磨皮 / 瘦手 / 调色，只把甲片叠加上去
+   · 三种方式定位：自动识别手指 / 点选指位 / 一键铺开
+   · 支持撤销上一步（含点选过程中的回退）
+   ===================================================================== */
+(function (global) {
+  'use strict';
+
+  var NAIL = global.NailArt;
+  var MAX_EDGE = 1800;               // 照片最长边限制
+
+  var FINGER_ORDER = [
+    { id: 'thumb', label: '拇指' },
+    { id: 'index', label: '食指' },
+    { id: 'middle', label: '中指' },
+    { id: 'ring', label: '无名指' },
+    { id: 'pinky', label: '小指' }
+  ];
+
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+
+  function rgba(hex, a) {
+    var s = String(hex || '#e8c3b0').replace('#', '');
+    if (s.length === 3) s = s.split('').map(function (c) { return c + c; }).join('');
+    return 'rgba(' + parseInt(s.slice(0, 2), 16) + ',' + parseInt(s.slice(2, 4), 16) +
+      ',' + parseInt(s.slice(4, 6), 16) + ',' + a + ')';
+  }
+
+  function toHex(r, g, b) {
+    var h = function (v) { var s = Math.max(0, Math.min(255, Math.round(v))).toString(16); return s.length < 2 ? '0' + s : s; };
+    return '#' + h(r) + h(g) + h(b);
+  }
+
+  function create(canvas, hooks) {
+    hooks = hooks || {};
+    var ctx = canvas.getContext('2d');
+    var img = null;
+    var nails = [];
+    var selected = -1;
+    var picking = null;
+    var pointers = new Map();
+    var drag = null;
+    var style = { styleId: 'nude-ombre', shapeId: 'almond', lenId: 'mid' };
+    var marks = [];
+    var history = [];
+    var lastKey = '', lastTime = 0;
+
+    /* 用于取色的超小图（不含甲片） */
+    var colorCv = document.createElement('canvas');
+    var colorData = null;
+    /* 只含照片、与画布同尺寸的图，供自动识别使用（不会被甲片污染） */
+    var photoCv = document.createElement('canvas');
+
+    /* ------------------------------ 历史 / 撤销 ------------------------------ */
+
+    function snapshot() {
+      return {
+        nails: nails.map(function (n) { return Object.assign({}, n); }),
+        selected: selected,
+        marks: marks.slice(),
+        picking: picking ? { idx: picking.idx, points: JSON.parse(JSON.stringify(picking.points)) } : null
+      };
+    }
+
+    function push(key) {
+      var now = Date.now();
+      if (key && key === lastKey && now - lastTime < 700) { lastTime = now; return; }
+      lastKey = key || ''; lastTime = now;
+      history.push(snapshot());
+      if (history.length > 40) history.shift();
+    }
+
+    function undo() {
+      if (!history.length) return false;
+      var s = history.pop();
+      nails = s.nails;
+      selected = s.selected;
+      marks = s.marks;
+      if (s.picking) {
+        picking = { steps: buildSteps(), idx: s.picking.idx, points: s.picking.points };
+      } else {
+        picking = null;
+      }
+      lastKey = '';
+      draw();
+      return true;
+    }
+
+    function canUndo() { return history.length > 0; }
+
+    /* ------------------------------ 绘制 ------------------------------ */
+
+    function currentRatio() { return NAIL.lengthRatio(style.lenId); }
+
+    function fitCanvas() {
+      if (!img) return;
+      var maxW = canvas.parentElement.clientWidth || 320;
+      var maxH = Math.max(240, window.innerHeight * 0.54);
+      var k = Math.min(maxW / canvas.width, maxH / canvas.height, 1.6);
+      canvas.style.width = Math.round(canvas.width * k) + 'px';
+      canvas.style.height = Math.round(canvas.height * k) + 'px';
+    }
+
+    /* 取肤色（从缩略图里读，便宜且稳定） */
+    function prepareColorBuffer() {
+      if (!img) return;
+      photoCv.width = canvas.width; photoCv.height = canvas.height;
+      photoCv.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      var w = Math.min(160, canvas.width), h = Math.max(1, Math.round(w * canvas.height / canvas.width));
+      colorCv.width = w; colorCv.height = h;
+      var c = colorCv.getContext('2d', { willReadFrequently: true });
+      c.drawImage(img, 0, 0, w, h);
+      colorData = c.getImageData(0, 0, w, h).data;
+    }
+
+    function sampleSkin(px, py) {
+      if (!colorData) return '#e8c3b0';
+      var w = colorCv.width, h = colorCv.height;
+      var x = Math.round(px / canvas.width * w), y = Math.round(py / canvas.height * h);
+      var r = 0, g = 0, b = 0, n = 0;
+      for (var dy = -2; dy <= 2; dy++) {
+        for (var dx = -2; dx <= 2; dx++) {
+          var xx = x + dx, yy = y + dy;
+          if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+          var i = (yy * w + xx) * 4;
+          r += colorData[i]; g += colorData[i + 1]; b += colorData[i + 2]; n++;
+        }
+      }
+      if (!n) return '#e8c3b0';
+      return toHex(r / n, g / n, b / n);
+    }
+
+    /* 画一片甲片：挂上阴影、环境色、甲根皮褶，让它像长在手上 */
+    function drawPatch(n, i) {
+      var w = n.baseW * n.sizeK;
+      var h = w * currentRatio();
+      var rot = (n.rot + n.rotAdd) * Math.PI / 180;
+      var art = NAIL.getCanvas(style.styleId, style.shapeId, style.lenId, 'main', (i + 1) * 13);
+      var path = new Path2D(NAIL.pathD(w, h, style.shapeId));
+
+      ctx.save();
+      ctx.translate(n.x, n.y);
+      ctx.rotate(rot);
+
+      /* 1. 接触阴影 */
+      ctx.save();
+      ctx.shadowColor = 'rgba(72,42,32,0.26)';
+      ctx.shadowBlur = Math.max(2, w * 0.09);
+      ctx.shadowOffsetY = Math.max(1, w * 0.02);
+      ctx.drawImage(art, -w / 2, 0, w, h);
+      ctx.restore();
+
+      /* 2. 环境色（附近肤色，轻微 multiply 融进画面） */
+      var skin = n._skin || (n._skin = sampleSkin(
+        n.x + Math.sin(rot) * w * 0.25,
+        n.y - Math.cos(rot) * w * 0.25
+      ));
+      ctx.save();
+      ctx.clip(path);
+      ctx.globalCompositeOperation = 'multiply';
+      ctx.globalAlpha = 0.18;
+      ctx.fillStyle = skin;
+      ctx.fillRect(-w / 2, -h * 0.1, w, h * 1.2);
+      ctx.restore();
+
+      /* 3. 甲根皮肤褶皱盖住甲片边缘 —— 真实感的关键 */
+      ctx.save();
+      ctx.clip(path);
+      var fold = ctx.createRadialGradient(0, -h * 0.015, w * 0.12, 0, -h * 0.015, w * 0.66);
+      fold.addColorStop(0, rgba(skin, 0.92));
+      fold.addColorStop(0.5, rgba(skin, 0.46));
+      fold.addColorStop(1, rgba(skin, 0));
+      ctx.fillStyle = fold;
+      ctx.fillRect(-w / 2, -h * 0.06, w, h * 0.34);
+      /* 皮肤与甲面交界处的一道细影 */
+      var line = ctx.createLinearGradient(0, h * 0.035, 0, h * 0.075);
+      line.addColorStop(0, 'rgba(120,74,58,0.20)');
+      line.addColorStop(1, 'rgba(120,74,58,0)');
+      ctx.fillStyle = line;
+      ctx.fillRect(-w / 2, h * 0.035, w, h * 0.04);
+      ctx.restore();
+
+      ctx.restore();
+
+      if (i === selected) {
+        ctx.save();
+        ctx.translate(n.x, n.y);
+        ctx.rotate(rot);
+        ctx.setLineDash([Math.max(5, w * 0.16), Math.max(4, w * 0.11)]);
+        ctx.lineWidth = Math.max(1.5, w * 0.035);
+        ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+        ctx.strokeRect(-w / 2 - 4, -6, w + 8, h + 12);
+        ctx.strokeStyle = 'rgba(201,126,110,0.95)';
+        ctx.lineWidth = Math.max(1, w * 0.022);
+        ctx.strokeRect(-w / 2 - 4, -6, w + 8, h + 12);
+        ctx.restore();
+      }
+    }
+
+    function draw() {
+      if (!img) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      if (!colorData) prepareColorBuffer();
+
+      nails.forEach(drawPatch);
+
+      if (picking) {
+        marks.forEach(function (m, i) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(m.x, m.y, 7, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(201,126,110,0.85)';
+          ctx.fill();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = '#fff';
+          ctx.stroke();
+          ctx.fillStyle = '#fff';
+          ctx.font = '600 13px system-ui, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(String(i + 1), m.x, m.y + 4.5);
+          ctx.restore();
+        });
+      }
+      if (hooks.onChange) hooks.onChange(info());
+    }
+
+    function info() {
+      return {
+        hasPhoto: !!img,
+        count: nails.length,
+        selected: selected,
+        canUndo: history.length > 0,
+        picking: picking ? { idx: picking.idx, total: picking.steps.length, step: picking.steps[picking.idx] } : null,
+        selectedNail: selected >= 0 && nails[selected] ? {
+          sizeK: nails[selected].sizeK,
+          rotAdd: nails[selected].rotAdd,
+          finger: FINGER_ORDER[selected] ? FINGER_ORDER[selected].label : ''
+        } : null
+      };
+    }
+
+    /* ------------------------------ 图片载入 ------------------------------ */
+
+    function resetAll() {
+      nails = [];
+      selected = -1;
+      picking = null;
+      marks = [];
+      pointers.clear();
+      drag = null;
+      history = [];
+      lastKey = '';
+    }
+
+    function loadFile(file) {
+      return new Promise(function (resolve, reject) {
+        if (!file) return reject(new Error('no file'));
+        var url = URL.createObjectURL(file);
+        var image = new Image();
+        image.onload = function () {
+          URL.revokeObjectURL(url);
+          var w = image.naturalWidth || image.width;
+          var h = image.naturalHeight || image.height;
+          var k = Math.min(1, MAX_EDGE / Math.max(w, h));
+          canvas.width = Math.max(2, Math.round(w * k));
+          canvas.height = Math.max(2, Math.round(h * k));
+          img = image;
+          colorData = null;
+          resetAll();
+          fitCanvas();
+          prepareColorBuffer();
+          draw();
+          resolve();
+        };
+        image.onerror = function () {
+          URL.revokeObjectURL(url);
+          reject(new Error('decode failed'));
+        };
+        image.src = url;
+      });
+    }
+
+    function clearPhoto() {
+      img = null;
+      colorData = null;
+      resetAll();
+      canvas.width = 2; canvas.height = 2;
+      canvas.style.width = ''; canvas.style.height = '';
+      ctx.clearRect(0, 0, 2, 2);
+      if (hooks.onChange) hooks.onChange(info());
+    }
+
+    /* ------------------------------ 自动识别手指 ------------------------------ */
+
+    function autoPlace() {
+      if (!img) return { ok: false, message: '先上传一张手的照片' };
+      if (!photoCv.width) prepareColorBuffer();
+      var res = global.HandDetect.detect(photoCv, {});
+      if (!res.ok) return { ok: false, message: res.message || '没识别到手指，请手动点选' };
+
+      push();
+      var fs = res.fingers;
+      /* 拇指：两端里更宽的那一根 */
+      var thumbAtStart = fs[0].width >= fs[fs.length - 1].width;
+      var seq = fs.slice();
+      if (!thumbAtStart) seq.reverse();
+
+      var arr = [];
+      for (var i = 0; i < seq.length && i < FINGER_ORDER.length; i++) {
+        var f = seq[i];
+        var meta = FINGER_ORDER[i];
+        var wK = meta.id === 'thumb' ? 0.76 : 0.72;
+        var nw = f.width * wK;
+        var cut = nw * 1.15;                 // 指尖到甲根的距离（自然甲约 1.15 倍甲宽）
+        arr.push({
+          fingerId: meta.id,
+          x: f.tip.x - f.dir.x * cut,
+          y: f.tip.y - f.dir.y * cut,
+          rot: Math.atan2(-f.dir.x, f.dir.y) * 180 / Math.PI,
+          baseW: nw,
+          sizeK: 1,
+          rotAdd: 0
+        });
+      }
+      nails = arr;
+      selected = nails.length ? nails.length - 1 : -1;
+      picking = null;
+      marks = [];
+      draw();
+      return { ok: true, count: nails.length };
+    }
+
+    /* ------------------------------ 点选指位 ------------------------------ */
+
+    function buildSteps() {
+      var steps = [];
+      FINGER_ORDER.forEach(function (f) {
+        steps.push({ finger: f.id, label: f.label, part: 'tip' });
+        steps.push({ finger: f.id, label: f.label, part: 'base' });
+      });
+      return steps;
+    }
+
+    function startPick() {
+      if (!img) return;
+      push();
+      nails = [];
+      selected = -1;
+      marks = [];
+      picking = { steps: buildSteps(), idx: 0, points: {} };
+      draw();
+    }
+
+    function cancelPick() {
+      picking = null;
+      marks = [];
+      draw();
+    }
+
+    function addPickPoint(pt) {
+      if (!picking) return;
+      push('pick');
+      var step = picking.steps[picking.idx];
+      var store = picking.points[step.finger] = picking.points[step.finger] || {};
+      store[step.part] = pt;
+      marks.push(pt);
+      picking.idx += 1;
+
+      var done = picking.points[step.finger];
+      if (done && done.tip && done.base) buildNail(step.finger, done.tip, done.base);
+      if (picking.idx >= picking.steps.length) {
+        picking = null;
+        marks = [];
+        selected = nails.length ? nails.length - 1 : -1;
+      }
+      draw();
+    }
+
+    function buildNail(fingerId, tipPt, basePt) {
+      var dx = tipPt.x - basePt.x, dy = tipPt.y - basePt.y;
+      var len = Math.hypot(dx, dy);
+      if (len < 6) return;
+      var rot = Math.atan2(-dx / len, dy / len) * 180 / Math.PI;
+      var idx = 0;
+      for (var i = 0; i < FINGER_ORDER.length; i++) if (FINGER_ORDER[i].id === fingerId) idx = i;
+      nails[idx] = {
+        fingerId: fingerId,
+        x: basePt.x,
+        y: basePt.y,
+        rot: rot,
+        baseW: len * 0.66,
+        sizeK: 1,
+        rotAdd: 0
+      };
+      nails = nails.filter(function (n) { return !!n; });
+    }
+
+    /* 兜底：一键在画面中部铺开 5 片 */
+    function spread() {
+      if (!img) return;
+      push();
+      var W = canvas.width, H = canvas.height;
+      var baseW = W * 0.062;
+      nails = FINGER_ORDER.map(function (f, i) {
+        return {
+          fingerId: f.id,
+          x: W * (0.30 + i * 0.10),
+          y: H * (0.34 + Math.abs(i - 2) * 0.035),
+          rot: 180 + (i - 2) * 7,
+          baseW: baseW * (i === 0 ? 1.12 : (i === 4 ? 0.86 : 1)),
+          sizeK: 1,
+          rotAdd: 0
+        };
+      });
+      selected = nails.length - 1;
+      picking = null;
+      marks = [];
+      draw();
+    }
+
+    /* ------------------------------ 交互 ------------------------------ */
+
+    function toCanvas(e) {
+      var r = canvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - r.left) / r.width * canvas.width,
+        y: (e.clientY - r.top) / r.height * canvas.height
+      };
+    }
+
+    function hitTest(pt) {
+      var ratio = currentRatio();
+      for (var i = nails.length - 1; i >= 0; i--) {
+        var n = nails[i];
+        var w = n.baseW * n.sizeK, h = w * ratio;
+        var a = -(n.rot + n.rotAdd) * Math.PI / 180;
+        var dx = pt.x - n.x, dy = pt.y - n.y;
+        var lx = dx * Math.cos(a) - dy * Math.sin(a);
+        var ly = dx * Math.sin(a) + dy * Math.cos(a);
+        var pad = w * 0.18;
+        if (Math.abs(lx) <= w / 2 + pad && ly >= -pad * 1.6 && ly <= h + pad) return i;
+      }
+      return -1;
+    }
+
+    function onPointerDown(e) {
+      if (!img) return;
+      if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+      var pt = toCanvas(e);
+      pointers.set(e.pointerId, pt);
+
+      if (picking) { addPickPoint(pt); return; }
+
+      if (pointers.size === 2) {
+        var arr = Array.from(pointers.values());
+        push('pinch');
+        drag = {
+          pinch: true,
+          dist: Math.hypot(arr[0].x - arr[1].x, arr[0].y - arr[1].y),
+          ang: Math.atan2(arr[1].y - arr[0].y, arr[1].x - arr[0].x) * 180 / Math.PI,
+          sizeK: nails[selected] ? nails[selected].sizeK : 1,
+          rotAdd: nails[selected] ? nails[selected].rotAdd : 0
+        };
+        return;
+      }
+
+      var hit = hitTest(pt);
+      selected = hit;
+      if (hit >= 0) {
+        push('move');
+        drag = { pinch: false, idx: hit, offX: pt.x - nails[hit].x, offY: pt.y - nails[hit].y };
+      }
+      draw();
+    }
+
+    function onPointerMove(e) {
+      if (!img || !pointers.has(e.pointerId)) return;
+      var pt = toCanvas(e);
+      pointers.set(e.pointerId, pt);
+      if (picking) return;
+
+      if (drag && drag.pinch && pointers.size >= 2 && selected >= 0) {
+        var arr = Array.from(pointers.values());
+        var d = Math.hypot(arr[0].x - arr[1].x, arr[0].y - arr[1].y);
+        var ang = Math.atan2(arr[1].y - arr[0].y, arr[1].x - arr[0].x) * 180 / Math.PI;
+        var n = nails[selected];
+        n.sizeK = clamp(drag.sizeK * (d / (drag.dist || d)), 0.35, 3.5);
+        n.rotAdd = drag.rotAdd + (ang - drag.ang);
+        draw();
+        return;
+      }
+
+      if (drag && !drag.pinch && drag.idx >= 0) {
+        var nail = nails[drag.idx];
+        if (!nail) return;
+        nail.x = pt.x - drag.offX;
+        nail.y = pt.y - drag.offY;
+        nail._skin = null;
+        draw();
+      }
+    }
+
+    function onPointerUp(e) {
+      pointers.delete(e.pointerId);
+      drag = null;
+      if (hooks.onChange) hooks.onChange(info());
+    }
+
+    function onWheel(e) {
+      if (!img || selected < 0) return;
+      e.preventDefault();
+      push('size');
+      var n = nails[selected];
+      n.sizeK = clamp(n.sizeK * (e.deltaY < 0 ? 1.06 : 0.94), 0.35, 3.5);
+      draw();
+    }
+
+    canvas.addEventListener('pointerdown', onPointerDown);
+    canvas.addEventListener('pointermove', onPointerMove);
+    canvas.addEventListener('pointerup', onPointerUp);
+    canvas.addEventListener('pointercancel', onPointerUp);
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('resize', function () { fitCanvas(); });
+
+    /* ------------------------------ 微调 ------------------------------ */
+
+    function setSize(v) {
+      if (selected < 0) return;
+      push('size');
+      nails[selected].sizeK = clamp(v, 0.35, 3.5);
+      draw();
+    }
+    function setRot(v) {
+      if (selected < 0) return;
+      push('rot');
+      nails[selected].rotAdd = v;
+      draw();
+    }
+    function syncAll() {
+      if (selected < 0) return;
+      push();
+      var s = nails[selected].sizeK, r = nails[selected].rotAdd;
+      nails.forEach(function (n) { n.sizeK = s; n.rotAdd = r; n._skin = null; });
+      draw();
+    }
+    function removeSelected() {
+      if (selected < 0) return;
+      push();
+      nails.splice(selected, 1);
+      selected = nails.length ? Math.min(selected, nails.length - 1) : -1;
+      draw();
+    }
+    function resetTweaks() {
+      push();
+      nails.forEach(function (n) { n.sizeK = 1; n.rotAdd = 0; });
+      draw();
+    }
+    function setStyle(next) {
+      style = Object.assign({}, style, next);
+      draw();
+    }
+
+    function exportBlob() {
+      return new Promise(function (resolve) {
+        var wasSelected = selected;
+        selected = -1;
+        draw();
+        var finish = function (blob) {
+          selected = wasSelected;
+          draw();
+          resolve(blob);
+        };
+        if (canvas.toBlob) canvas.toBlob(finish, 'image/png');
+        else finish(null);
+      });
+    }
+
+    return {
+      loadFile: loadFile,
+      clearPhoto: clearPhoto,
+      autoPlace: autoPlace,
+      startPick: startPick,
+      cancelPick: cancelPick,
+      spread: spread,
+      undo: undo,
+      canUndo: canUndo,
+      setStyle: setStyle,
+      setSize: setSize,
+      setRot: setRot,
+      syncAll: syncAll,
+      removeSelected: removeSelected,
+      resetTweaks: resetTweaks,
+      exportBlob: exportBlob,
+      redraw: draw,
+      fit: fitCanvas,
+      info: info,
+      canvas: canvas,
+      hasPhoto: function () { return !!img; }
+    };
+  }
+
+  global.TryOn = { create: create };
+})(window);
+
+</script>
+<script>
+/* =====================================================================
+   app.js — 页面交互：款式选择 / 模型手预览 / 照片试戴控制
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  var NAIL = window.NailArt;
+
+  var state = {
+    styleId: 'nude-ombre',
+    shapeId: 'almond',
+    lenId: 'mid',
+    series: 'all',
+    mode: 'photo'
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* 安全绑定，避免某个元素缺失就整页脚本挂掉 */
+  function on(id, type, fn) {
+    var el = $(id);
+    if (el) el.addEventListener(type, fn);
+    return el;
+  }
+
+  /* ------------------------------ 小工具 ------------------------------ */
+
+  var toastTimer = null;
+  function toast(msg) {
+    var el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2200);
+  }
+
+  /* ------------------------------ 款式选择 ------------------------------ */
+
+  function renderSeries() {
+    var box = $('seriesChips');
+    box.innerHTML = '';
+    NAIL.SERIES.forEach(function (s) {
+      var b = document.createElement('button');
+      b.className = 'chip' + (state.series === s.id ? ' on' : '');
+      b.textContent = s.name;
+      b.addEventListener('click', function () {
+        state.series = s.id;
+        renderSeries();
+        renderStrip();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  function renderStrip() {
+    var box = $('styleStrip');
+    box.innerHTML = '';
+    NAIL.STYLES.filter(function (s) {
+      return state.series === 'all' || s.series === state.series;
+    }).forEach(function (s) {
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'style-card' + (state.styleId === s.id ? ' on' : '');
+      card.dataset.style = s.id;
+
+      var cvs = document.createElement('canvas');
+      cvs.className = 'style-thumb';
+      cvs.width = 168; cvs.height = 200;
+      cvs.dataset.style = s.id;
+
+      var name = document.createElement('span');
+      name.className = 'style-name';
+      name.textContent = s.name;
+
+      card.appendChild(cvs);
+      card.appendChild(name);
+      card.addEventListener('click', function () { selectStyle(s.id); });
+      box.appendChild(card);
+    });
+    paintThumbs();
+  }
+
+  function paintThumbs() {
+    var list = document.querySelectorAll('.style-thumb');
+    Array.prototype.forEach.call(list, function (cvs) {
+      var ctx = cvs.getContext('2d');
+      var W = cvs.width, H = cvs.height;
+      ctx.clearRect(0, 0, W, H);
+      var src = NAIL.getCanvas(cvs.dataset.style, state.shapeId, state.lenId, 'thumb');
+      var pad = 14;
+      var s = Math.min((W - pad * 2) / src.width, (H - pad * 2) / src.height);
+      var w = src.width * s, h = src.height * s;
+      ctx.save();
+      ctx.shadowColor = 'rgba(176,128,110,0.35)';
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetY = 3;
+      ctx.drawImage(src, (W - w) / 2, (H - h) / 2, w, h);
+      ctx.restore();
+    });
+  }
+
+  function selectStyle(id) {
+    state.styleId = id;
+    Array.prototype.forEach.call(document.querySelectorAll('.style-card'), function (el) {
+      el.classList.toggle('on', el.dataset.style === id);
+    });
+    syncPreview();
+  }
+
+  function renderOptionBars() {
+    var shapeBox = $('shapeChips');
+    shapeBox.innerHTML = '';
+    NAIL.SHAPES.forEach(function (s) {
+      var b = document.createElement('button');
+      b.className = 'chip' + (state.shapeId === s.id ? ' on' : '');
+      b.textContent = s.name;
+      b.dataset.shape = s.id;
+      b.addEventListener('click', function () {
+        state.shapeId = s.id;
+        renderOptionBars();
+        paintThumbs();
+        syncPreview();
+      });
+      shapeBox.appendChild(b);
+    });
+
+    var lenBox = $('lenChips');
+    lenBox.innerHTML = '';
+    NAIL.LENGTHS.forEach(function (l) {
+      var b = document.createElement('button');
+      b.className = 'chip' + (state.lenId === l.id ? ' on' : '');
+      b.textContent = l.name;
+      b.dataset.len = l.id;
+      b.addEventListener('click', function () {
+        state.lenId = l.id;
+        renderOptionBars();
+        paintThumbs();
+        syncPreview();
+      });
+      lenBox.appendChild(b);
+    });
+  }
+
+  /* ------------------------------ 预览同步 ------------------------------ */
+
+  function syncPreview() {
+    window.HandModel.update($('viewModel'), {
+      styleId: state.styleId, shapeId: state.shapeId, lenId: state.lenId
+    });
+    tryon.setStyle({ styleId: state.styleId, shapeId: state.shapeId, lenId: state.lenId });
+    var st = NAIL.styleById(state.styleId);
+    $('curStyleName').textContent = st.name;
+  }
+
+  /* ------------------------------ 照片试戴 ------------------------------ */
+
+  var tryon = window.TryOn.create($('photoCanvas'), { onChange: syncPhotoUI });
+  var sliderBusy = false;
+
+  function syncPhotoUI(info) {
+    $('photoEmpty').hidden = info.hasPhoto;
+    $('placeRow').hidden = !info.hasPhoto || !!info.picking;
+    $('adjustRow').hidden = !info.hasPhoto || !info.selectedNail;
+    $('saveBtn').hidden = !info.hasPhoto;
+    $('clearBtn').hidden = !info.hasPhoto;
+    $('photoTools').hidden = state.mode !== 'photo' || !info.hasPhoto;
+    $('autoBtn').textContent = info.count ? '重新识别手指' : '自动识别手指';
+    ['undoBtn', 'undoBtn2'].forEach(function (id) {
+      var b = $(id);
+      if (b) b.disabled = !info.canUndo;
+    });
+
+    if (info.picking) {
+      var step = info.picking.step;
+      var part = step.part === 'tip' ? '指甲尖端' : '指甲根部（与皮肤交界处）';
+      $('pickBar').hidden = false;
+      $('pickText').textContent = '第 ' + (info.picking.idx + 1) + '/' + info.picking.total +
+        ' 步 · 点一下【' + step.label + '】的' + part;
+    } else {
+      $('pickBar').hidden = true;
+    }
+
+    if (info.selectedNail && !sliderBusy) {
+      $('rngSize').value = info.selectedNail.sizeK;
+      $('rngRot').value = Math.round(info.selectedNail.rotAdd * 2) / 2;
+      $('selName').textContent = info.selectedNail.finger;
+      $('adjustRow').hidden = false;
+    }
+  }
+
+  function setMode(mode) {
+    state.mode = mode;
+    $('viewModel').hidden = mode !== 'model';
+    $('viewPhoto').hidden = mode !== 'photo';
+    document.querySelectorAll('#modeTabs button').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.mode === mode);
+    });
+    $('stageHint').textContent = mode === 'model'
+      ? '模型手 · 自然手型，不做任何美化'
+      : '真实照片 · 只叠加甲片，不修饰肤色与手型';
+    $('photoTools').hidden = mode !== 'photo';
+    if (mode === 'photo') {
+      requestAnimationFrame(function () { tryon.fit(); syncPhotoUI(tryon.info()); });
+    }
+  }
+
+  function handleFile(file) {
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { toast('请选择图片文件'); return; }
+    toast('正在载入照片…');
+    tryon.loadFile(file).then(function () {
+      setMode('photo');
+      toast('照片已载入，正在识别手指…');
+      setTimeout(function () {
+        var r = tryon.autoPlace();
+        if (r.ok) toast('识别到 ' + r.count + ' 根手指，可拖动微调');
+        else toast('没自动认出手指，请点「手动点选指位」');
+      }, 60);
+    }).catch(function () {
+      toast('照片读取失败，请换一张试试');
+    });
+  }
+
+  function doUndo() {
+    if (tryon.undo()) toast('已回到上一步');
+    else toast('没有可回退的步骤了');
+  }
+
+  /* ------------------------------ 初始化 ------------------------------ */
+
+  function init() {
+    window.HandModel.mount($('viewModel'));
+    renderSeries();
+    renderOptionBars();
+    renderStrip();
+
+    Array.prototype.forEach.call(document.querySelectorAll('#modeTabs button'), function (b) {
+      b.addEventListener('click', function () { setMode(b.dataset.mode); });
+    });
+
+    on('camInput', 'change', function (e) {
+      handleFile(e.target.files && e.target.files[0]);
+      e.target.value = '';
+    });
+    on('fileInput', 'change', function (e) {
+      handleFile(e.target.files && e.target.files[0]);
+      e.target.value = '';
+    });
+    on('camBtn2', 'click', function () { $('camInput').click(); });
+    on('fileBtn2', 'click', function () { $('fileInput').click(); });
+    on('clearBtn', 'click', function () {
+      tryon.clearPhoto();
+      toast('已移除照片');
+    });
+
+    on('autoBtn', 'click', function () {
+      toast('正在识别手指…');
+      setTimeout(function () {
+        var r = tryon.autoPlace();
+        if (r.ok) toast('识别到 ' + r.count + ' 根手指，可拖动微调');
+        else toast(r.message || '没识别到手指，请手动点选');
+      }, 40);
+    });
+    on('pickBtn', 'click', function () {
+      tryon.startPick();
+      toast('按提示依次点选 10 个位置');
+    });
+    on('undoBtn', 'click', doUndo);
+    on('undoBtn2', 'click', doUndo);
+    on('pickUndoBtn', 'click', doUndo);
+    on('cancelPickBtn', 'click', function () { tryon.cancelPick(); });
+    on('spreadBtn', 'click', function () {
+      tryon.spread();
+      toast('已铺开 5 片，拖动到对应手指即可');
+    });
+
+    ['rngSize', 'rngRot'].forEach(function (id) {
+      var el = $(id);
+      var start = function () { sliderBusy = true; };
+      var end = function () { sliderBusy = false; };
+      el.addEventListener('pointerdown', start);
+      el.addEventListener('pointerup', end);
+      el.addEventListener('touchstart', start, { passive: true });
+      el.addEventListener('touchend', end);
+      el.addEventListener('input', function () {
+        sliderBusy = true;
+        if (id === 'rngSize') tryon.setSize(parseFloat(el.value));
+        else tryon.setRot(parseFloat(el.value));
+      });
+      el.addEventListener('change', function () { sliderBusy = false; });
+    });
+    on('syncBtn', 'click', function () {
+      tryon.syncAll();
+      toast('已同步到所有手指');
+    });
+    on('resetBtn', 'click', function () {
+      tryon.resetTweaks();
+      toast('已重置微调');
+    });
+    on('delBtn', 'click', function () {
+      if (!tryon.info().selectedNail) return;
+      tryon.removeSelected();
+      toast('已删除该片');
+    });
+
+    on('saveBtn', 'click', function () {
+      toast('正在生成效果图…');
+      tryon.exportBlob().then(function (blob) {
+        if (!blob) { toast('保存失败，请长按图片保存'); return; }
+        var url = URL.createObjectURL(blob);
+        $('resultImg').src = url;
+        $('resultLink').href = url;
+        $('resultModal').classList.add('show');
+        toast('效果图已生成');
+      });
+    });
+    on('closeResult', 'click', function () {
+      $('resultModal').classList.remove('show');
+    });
+
+    setMode('photo');
+    syncPreview();
+
+    // 便于本地调试 / 演示：?demo=图片地址 可直接载入一张照片
+    var demo = new URLSearchParams(location.search).get('demo');
+    if (demo) {
+      setMode('photo');
+      fetch(demo).then(function (r) { return r.blob(); }).then(function (b) {
+        return tryon.loadFile(new File([b], 'demo.jpg', { type: b.type || 'image/jpeg' }));
+      }).then(function () {
+        tryon.autoPlace();
+        syncPhotoUI(tryon.info());
+      }).catch(function () { toast('演示图片载入失败'); });
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+</script>
+<script>
+/* ===== 离线（PWA）：注册 Service Worker + 安装到桌面 ===== */
+(function () {
+  var isHttp = location.protocol === 'http:' || location.protocol === 'https:';
+
+  // 1) 注册 Service Worker：首次联网打开后整个网站会被缓存，之后断网也能用
+  if (isHttp && 'serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
+
+  var bar = document.getElementById('installBar');
+  var text = document.getElementById('installText');
+  var btn = document.getElementById('installBtn');
+  var close = document.getElementById('installClose');
+  if (!bar) return;
+
+  function hideBar() {
+    bar.hidden = true;
+    document.body.classList.remove('has-install-bar');
+  }
+  function showBar(msg, withBtn) {
+    text.textContent = msg;
+    btn.hidden = !withBtn;
+    bar.hidden = false;
+    document.body.classList.add('has-install-bar');
+  }
+  if (close) close.addEventListener('click', hideBar);
+
+  // 已经是「桌面应用」模式打开的，不用再提示安装
+  var standalone = window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+
+  var ua = navigator.userAgent || '';
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document);
+  var isWeChat = /MicroMessenger/i.test(ua);
+  var deferred = null;
+
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    if (!standalone) showBar('装到手机桌面，以后没网也能直接打开', true);
+  });
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      if (!deferred) return;
+      deferred.prompt();
+      deferred.userChoice.then(function () { deferred = null; hideBar(); });
+    });
+  }
+
+  window.addEventListener('appinstalled', hideBar);
+
+  // iOS（含 Safari / 微信）不会触发 beforeinstallprompt，给一句手动指引
+  if (!standalone && !deferred) {
+    if (isWeChat) {
+      showBar('微信里请点右上角「⋯」→ 在浏览器打开，再添加到主屏幕', false);
+    } else if (isIOS) {
+      showBar('点底部分享 ↑ → 添加到主屏幕，之后可离线使用', false);
+    }
+  }
+
+  // 断网时给个提示，避免用户以为坏了
+  window.addEventListener('offline', function () {
+    showBar('已离线，仍可正常拍照试戴（照片只在本机处理）', false);
+  });
+})();
+</script>
+</body>
+</html>
