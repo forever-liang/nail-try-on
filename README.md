@@ -3,6 +3,15 @@
 纯前端的「拍自己的手 → 自动贴甲片 → 看效果挑款式」小站。
 手机、平板、电脑都能用，**照片只在本机浏览器里处理，不会上传到任何服务器**。
 
+## 在线地址（已部署，手机可直接用）
+
+- 网址：**https://forever-liang.github.io/nail-try-on/**
+- 仓库：https://github.com/forever-liang/nail-try-on
+- 手机扫码打开：`preview/qr-pages.png`
+- 装到桌面后**可完全离线使用**（首次联网打开一次即可）
+
+![二维码](preview/qr-pages.png)
+
 ![手机端](preview/mobile.png)
 
 ## 两种打开方式
